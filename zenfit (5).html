@@ -1,0 +1,2806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e1a">
+<meta name="description" content="ZenFit - Your complete fitness companion">
+<title>ZenFit - Fitness Reimagined</title>
+<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlplbkZpdCIsCiAgInNob3J0X25hbWUiOiAiWmVuRml0IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwYTBlMWEiLAogICJ0aGVtZV9jb2xvciI6ICIjMGEwZTFhIiwKICAiaWNvbnMiOiBbXQp9">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Serif+Display&family=JetBrains+Mono:wght@400;600&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+  --bg: #0a0e1a;
+  --bg-card: #131826;
+  --bg-elevated: #1a2032;
+  --accent: #c4ff3d;
+  --accent-dim: #8fb82e;
+  --text: #ffffff;
+  --text-dim: #8b92a8;
+  --text-mute: #5a6178;
+  --border: #232938;
+  --danger: #ff4757;
+  --success: #2ed573;
+  --warning: #ffa502;
+  --blue: #4facfe;
+  --purple: #a78bfa;
+  --pink: #ec4899;
+}
+
+[data-theme="light"] {
+  --bg: #f5f5f0;
+  --bg-card: #ffffff;
+  --bg-elevated: #fafaf5;
+  --text: #0a0e1a;
+  --text-dim: #5a6178;
+  --text-mute: #8b92a8;
+  --border: #e5e5e0;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+body {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 90px;
+  position: relative;
+}
+
+.serif { font-family: 'DM Serif Display', serif; font-weight: 400; }
+.mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ===== ONBOARDING ===== */
+.onboarding {
+  position: fixed;
+  inset: 0;
+  background: var(--bg);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  padding: 40px 24px;
+  overflow-y: auto;
+}
+
+.onboarding.hidden { display: none; }
+
+.ob-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 48px;
+  text-align: center;
+  margin: 40px 0 8px;
+}
+
+.ob-logo span { color: var(--accent); font-style: italic; }
+
+.ob-tagline {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+
+.ob-step { display: none; }
+.ob-step.active { display: block; animation: slideIn 0.4s ease; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.ob-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.ob-subtitle {
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  font-size: 15px;
+}
+
+.ob-input, .ob-select {
+  width: 100%;
+  padding: 18px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  margin-bottom: 16px;
+  transition: all 0.2s;
+}
+
+.ob-input:focus, .ob-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.ob-options {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.ob-option {
+  padding: 20px;
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.ob-option:hover, .ob-option.selected {
+  border-color: var(--accent);
+  background: var(--bg-elevated);
+}
+
+.ob-option-icon {
+  font-size: 32px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+}
+
+.ob-option.selected .ob-option-icon { background: var(--accent); }
+
+.ob-option-text { flex: 1; }
+.ob-option-title { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+.ob-option-desc { font-size: 13px; color: var(--text-dim); }
+
+.ob-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.ob-btn {
+  width: 100%;
+  padding: 20px;
+  background: var(--accent);
+  color: #0a0e1a;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 16px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: transform 0.2s;
+}
+
+.ob-btn:active { transform: scale(0.98); }
+.ob-btn.secondary { background: var(--bg-card); color: var(--text); border: 1px solid var(--border); }
+
+.ob-progress {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.ob-dot {
+  flex: 1;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+
+.ob-dot.active { background: var(--accent); }
+
+/* ===== MAIN APP ===== */
+.app { display: none; }
+.app.visible { display: block; }
+
+.header {
+  padding: 24px 20px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting {
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.username {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+}
+
+.header-actions { display: flex; gap: 12px; }
+
+.icon-btn {
+  width: 44px;
+  height: 44px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--text);
+}
+
+.page { display: none; padding: 0 20px; }
+.page.active { display: block; }
+
+/* ===== HOME PAGE ===== */
+.hero-card {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dim) 100%);
+  border-radius: 24px;
+  padding: 24px;
+  color: #0a0e1a;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -20%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+}
+
+.hero-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.hero-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 56px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.hero-unit { font-size: 14px; opacity: 0.7; }
+
+.hero-progress {
+  margin-top: 20px;
+  background: rgba(0,0,0,0.15);
+  border-radius: 100px;
+  height: 8px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-progress-bar {
+  height: 100%;
+  background: #0a0e1a;
+  border-radius: 100px;
+  transition: width 0.6s ease;
+}
+
+.hero-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  font-size: 13px;
+  position: relative;
+  z-index: 1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 18px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.stat-card:active { transform: scale(0.97); }
+
+.stat-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.stat-unit { font-size: 12px; color: var(--text-dim); margin-left: 4px; }
+
+.stat-bar {
+  margin-top: 10px;
+  height: 4px;
+  background: var(--bg-elevated);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.stat-bar-fill { height: 100%; border-radius: 100px; transition: width 0.5s; }
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  margin: 24px 0 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title a {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.streak-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.streak-flame {
+  font-size: 48px;
+  filter: drop-shadow(0 0 20px rgba(255, 165, 2, 0.5));
+}
+
+.streak-info { flex: 1; }
+.streak-number {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  line-height: 1;
+}
+.streak-label { color: var(--text-dim); font-size: 13px; margin-top: 4px; }
+
+.quote-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.quote-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.quote-author {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== WORKOUT PAGE ===== */
+.workout-categories {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.workout-cat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.workout-cat.active {
+  background: var(--accent);
+  color: #0a0e1a;
+  border-color: var(--accent);
+}
+
+.workout-cat-icon { font-size: 24px; margin-bottom: 6px; }
+.workout-cat-name { font-size: 12px; font-weight: 600; }
+
+.exercise-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+}
+
+.exercise-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.exercise-info { flex: 1; }
+.exercise-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
+.exercise-meta { font-size: 13px; color: var(--text-dim); }
+.exercise-arrow { color: var(--text-mute); font-size: 20px; }
+
+/* ===== DIET PAGE ===== */
+.macro-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.macro-total {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.macro-total-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 56px;
+  line-height: 1;
+}
+
+.macro-total-label {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.macro-circles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.macro-item { text-align: center; }
+
+.macro-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin: 0 auto 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.macro-circle svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.macro-circle-bg { fill: none; stroke: var(--bg-elevated); stroke-width: 6; }
+.macro-circle-fg { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.6s; }
+
+.macro-value { font-weight: 700; font-size: 14px; position: relative; z-index: 1; }
+.macro-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+
+.meal-section { margin-bottom: 16px; }
+
+.meal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 0 4px;
+}
+
+.meal-title {
+  font-weight: 600;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.meal-add {
+  background: var(--accent);
+  color: #0a0e1a;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.meal-items {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.meal-item {
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.meal-item:last-child { border-bottom: none; }
+
+.meal-item-name { font-size: 14px; font-weight: 500; }
+.meal-item-cal { font-size: 13px; color: var(--text-dim); }
+
+.meal-empty { padding: 20px; text-align: center; color: var(--text-mute); font-size: 13px; }
+
+/* ===== PROGRESS PAGE ===== */
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.chart-title { font-size: 14px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.chart-value { font-family: 'DM Serif Display', serif; font-size: 36px; line-height: 1; margin-bottom: 16px; }
+
+.chart-svg { width: 100%; height: 140px; }
+
+.measurements {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.measurement {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.measurement-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.measurement-value { font-family: 'DM Serif Display', serif; font-size: 24px; }
+.measurement-unit { font-size: 12px; color: var(--text-dim); margin-left: 4px; }
+
+.achievements {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.achievement {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 8px;
+  text-align: center;
+  position: relative;
+}
+
+.achievement.locked { opacity: 0.4; }
+.achievement-icon { font-size: 32px; margin-bottom: 6px; }
+.achievement-name { font-size: 11px; font-weight: 600; }
+
+/* ===== PROFILE PAGE ===== */
+.profile-header {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  font-family: 'DM Serif Display', serif;
+  color: #0a0e1a;
+}
+
+.profile-name { font-family: 'DM Serif Display', serif; font-size: 24px; margin-bottom: 4px; }
+.profile-meta { font-size: 13px; color: var(--text-dim); }
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.profile-stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 8px;
+  text-align: center;
+}
+
+.profile-stat-value { font-family: 'DM Serif Display', serif; font-size: 22px; }
+.profile-stat-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; margin-top: 4px; }
+
+.menu-list {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.menu-item {
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.menu-item:last-child { border-bottom: none; }
+.menu-item-icon { font-size: 22px; width: 32px; }
+.menu-item-text { flex: 1; font-weight: 500; }
+.menu-item-arrow { color: var(--text-mute); }
+
+/* ===== BUNDLES ===== */
+.bundle-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 14px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.bundle-card:active { transform: scale(0.98); }
+
+.bundle-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--bundle-color, var(--accent));
+}
+
+.bundle-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.bundle-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+
+.bundle-info { flex: 1; min-width: 0; }
+
+.bundle-name {
+  font-family: 'DM Serif Display', serif;
+  font-size: 20px;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.bundle-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+
+.bundle-meta span { display: flex; align-items: center; gap: 4px; }
+
+.bundle-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.bundle-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.bundle-tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: var(--bg-elevated);
+  border-radius: 100px;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bundle-tag.active {
+  background: var(--accent);
+  color: #0a0e1a;
+}
+
+.bundle-progress {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bundle-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-elevated);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.bundle-progress-fill {
+  height: 100%;
+  background: var(--bundle-color, var(--accent));
+  border-radius: 100px;
+  transition: width 0.5s;
+}
+
+.bundle-progress-text { font-size: 12px; font-weight: 600; color: var(--text-dim); }
+
+/* Bundle detail */
+.bundle-detail-hero {
+  margin: -24px -24px 20px;
+  padding: 32px 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.bundle-detail-icon { font-size: 64px; margin-bottom: 12px; }
+.bundle-detail-name { font-family: 'DM Serif Display', serif; font-size: 32px; line-height: 1.1; margin-bottom: 8px; }
+.bundle-detail-goal { font-size: 14px; opacity: 0.9; }
+
+.bundle-section {
+  margin-bottom: 20px;
+}
+
+.bundle-section-title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.bundle-list-item {
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bundle-list-item::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Task items - day tracker */
+.task-item {
+  background: var(--bg-elevated);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.task-item:active { transform: scale(0.98); }
+
+.task-item.done {
+  border-color: var(--accent);
+  background: rgba(196, 255, 61, 0.08);
+}
+
+.task-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 2px solid var(--text-mute);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-weight: 700;
+  font-size: 16px;
+  color: #0a0e1a;
+  transition: all 0.2s;
+}
+
+.task-item.done .task-check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.task-text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.task-item.done .task-text {
+  color: var(--text-dim);
+  text-decoration: line-through;
+}
+
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 8px 24px;
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--text-mute);
+  transition: color 0.2s;
+}
+
+.nav-item.active { color: var(--accent); }
+.nav-icon { font-size: 22px; }
+.nav-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal.visible { display: flex; animation: fadeIn 0.2s; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+  background: var(--bg-card);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px 24px 0 0;
+  padding: 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.modal-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  background: var(--bg-elevated);
+  border: none;
+  border-radius: 50%;
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+
+.input:focus { outline: none; border-color: var(--accent); }
+
+.btn-primary {
+  width: 100%;
+  padding: 18px;
+  background: var(--accent);
+  color: #0a0e1a;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.food-list { max-height: 300px; overflow-y: auto; margin: 16px 0; }
+
+.food-item {
+  padding: 14px;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.food-item:hover { background: var(--border); }
+.food-name { font-weight: 500; font-size: 14px; }
+.food-cal { font-size: 13px; color: var(--accent); font-weight: 600; }
+
+.water-display {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.water-glasses {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.water-glass {
+  aspect-ratio: 1;
+  background: var(--bg-elevated);
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.water-glass.filled {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+/* ===== TIMER ===== */
+.timer-display {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.timer-circle {
+  width: 240px;
+  height: 240px;
+  margin: 0 auto 24px;
+  position: relative;
+}
+
+.timer-circle svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.timer-bg { fill: none; stroke: var(--bg-elevated); stroke-width: 8; }
+.timer-fg { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.5s linear; }
+
+.timer-time {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 64px;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.timer-btn {
+  padding: 16px 32px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  color: var(--text);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.timer-btn.primary { background: var(--accent); color: #0a0e1a; border-color: var(--accent); }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  padding: 14px 24px;
+  border-radius: 12px;
+  z-index: 300;
+  display: none;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--accent);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.toast.visible { display: block; animation: toastIn 0.3s; }
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* lang toggle */
+.lang-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text);
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING ============ -->
+<div class="onboarding" id="onboarding">
+  <button class="lang-toggle" onclick="toggleLang()"><span data-i18n="langBtn">हिंदी</span></button>
+
+  <div class="ob-logo">Zen<span>Fit</span></div>
+  <div class="ob-tagline" data-i18n="tagline">Fitness Reimagined</div>
+
+  <div class="ob-progress">
+    <div class="ob-dot active"></div>
+    <div class="ob-dot"></div>
+    <div class="ob-dot"></div>
+    <div class="ob-dot"></div>
+  </div>
+
+  <!-- Step 1: Name -->
+  <div class="ob-step active" id="step1">
+    <h1 class="ob-title" data-i18n="welcomeTitle">What should we call you?</h1>
+    <p class="ob-subtitle" data-i18n="welcomeSub">Let's personalize your journey</p>
+    <input type="text" class="ob-input" id="userName" data-i18n-placeholder="namePlaceholder" placeholder="Your name">
+    <button class="ob-btn" onclick="nextStep(2)" data-i18n="continue">Continue</button>
+  </div>
+
+  <!-- Step 2: Goal -->
+  <div class="ob-step" id="step2">
+    <h1 class="ob-title" data-i18n="goalTitle">What's your goal?</h1>
+    <p class="ob-subtitle" data-i18n="goalSub">We'll customize your plan</p>
+    <div class="ob-options">
+      <div class="ob-option" onclick="selectGoal(this, 'lose')">
+        <div class="ob-option-icon">🔥</div>
+        <div class="ob-option-text">
+          <div class="ob-option-title" data-i18n="goalLose">Lose Weight</div>
+          <div class="ob-option-desc" data-i18n="goalLoseDesc">Burn fat & get lean</div>
+        </div>
+      </div>
+      <div class="ob-option" onclick="selectGoal(this, 'gain')">
+        <div class="ob-option-icon">💪</div>
+        <div class="ob-option-text">
+          <div class="ob-option-title" data-i18n="goalGain">Build Muscle</div>
+          <div class="ob-option-desc" data-i18n="goalGainDesc">Gain strength & mass</div>
+        </div>
+      </div>
+      <div class="ob-option" onclick="selectGoal(this, 'maintain')">
+        <div class="ob-option-icon">⚡</div>
+        <div class="ob-option-text">
+          <div class="ob-option-title" data-i18n="goalMaintain">Stay Fit</div>
+          <div class="ob-option-desc" data-i18n="goalMaintainDesc">Maintain & feel great</div>
+        </div>
+      </div>
+    </div>
+    <button class="ob-btn" onclick="nextStep(3)" data-i18n="continue">Continue</button>
+  </div>
+
+  <!-- Step 3: Body -->
+  <div class="ob-step" id="step3">
+    <h1 class="ob-title" data-i18n="bodyTitle">Tell us about you</h1>
+    <p class="ob-subtitle" data-i18n="bodySub">For accurate calculations</p>
+    <div class="ob-row">
+      <input type="number" class="ob-input" id="userAge" placeholder="Age">
+      <select class="ob-select" id="userGender">
+        <option value="male" data-i18n="male">Male</option>
+        <option value="female" data-i18n="female">Female</option>
+      </select>
+    </div>
+    <div class="ob-row">
+      <input type="number" class="ob-input" id="userHeight" placeholder="Height (cm)">
+      <input type="number" class="ob-input" id="userWeight" placeholder="Weight (kg)">
+    </div>
+    <button class="ob-btn" onclick="nextStep(4)" data-i18n="continue">Continue</button>
+  </div>
+
+  <!-- Step 4: Activity -->
+  <div class="ob-step" id="step4">
+    <h1 class="ob-title" data-i18n="activityTitle">Activity level?</h1>
+    <p class="ob-subtitle" data-i18n="activitySub">How active are you daily?</p>
+    <div class="ob-options">
+      <div class="ob-option" onclick="selectActivity(this, 1.2)">
+        <div class="ob-option-icon">🛋️</div>
+        <div class="ob-option-text">
+          <div class="ob-option-title" data-i18n="actLow">Sedentary</div>
+          <div class="ob-option-desc" data-i18n="actLowDesc">Little to no exercise</div>
+        </div>
+      </div>
+      <div class="ob-option" onclick="selectActivity(this, 1.55)">
+        <div class="ob-option-icon">🚶</div>
+        <div class="ob-option-text">
+          <div class="ob-option-title" data-i18n="actMid">Moderate</div>
+          <div class="ob-option-desc" data-i18n="actMidDesc">3-5 days/week exercise</div>
+        </div>
+      </div>
+      <div class="ob-option" onclick="selectActivity(this, 1.725)">
+        <div class="ob-option-icon">🏃</div>
+        <div class="ob-option-text">
+          <div class="ob-option-title" data-i18n="actHigh">Very Active</div>
+          <div class="ob-option-desc" data-i18n="actHighDesc">Daily intense exercise</div>
+        </div>
+      </div>
+    </div>
+    <button class="ob-btn" onclick="finishOnboarding()" data-i18n="getStarted">Get Started</button>
+  </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div class="app" id="app">
+  <div class="header">
+    <div>
+      <div class="greeting" id="greeting">Good morning</div>
+      <div class="username" id="displayName">Friend</div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleLang()" title="Language">🌐</button>
+      <button class="icon-btn" onclick="toggleTheme()" title="Theme">🌙</button>
+    </div>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="hero-card" onclick="openModal('stepsModal')">
+      <div class="hero-label" data-i18n="stepsToday">Steps Today</div>
+      <div class="hero-value" id="stepsCount">0</div>
+      <div class="hero-unit">/ <span id="stepsGoal">10000</span> <span data-i18n="steps">steps</span></div>
+      <div class="hero-progress"><div class="hero-progress-bar" id="stepsBar" style="width: 0%"></div></div>
+      <div class="hero-meta">
+        <span><span id="stepsKcal">0</span> kcal</span>
+        <span><span id="stepsKm">0</span> km</span>
+      </div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card" onclick="openModal('waterModal')">
+        <div class="stat-icon" style="background: rgba(79,172,254,0.15); color: var(--blue)">💧</div>
+        <div class="stat-label" data-i18n="water">Water</div>
+        <div class="stat-value"><span id="waterCount">0</span><span class="stat-unit">/ 8</span></div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="waterBar" style="background: var(--blue); width: 0%"></div></div>
+      </div>
+
+      <div class="stat-card" onclick="openModal('caloriesModal')">
+        <div class="stat-icon" style="background: rgba(255,71,87,0.15); color: var(--danger)">🔥</div>
+        <div class="stat-label" data-i18n="calories">Calories</div>
+        <div class="stat-value"><span id="caloriesCount">0</span><span class="stat-unit">kcal</span></div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="caloriesBar" style="background: var(--danger); width: 0%"></div></div>
+      </div>
+
+      <div class="stat-card" onclick="openModal('weightModal')">
+        <div class="stat-icon" style="background: rgba(167,139,250,0.15); color: var(--purple)">⚖️</div>
+        <div class="stat-label" data-i18n="weight">Weight</div>
+        <div class="stat-value"><span id="weightDisplay">0</span><span class="stat-unit">kg</span></div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="background: var(--purple); width: 60%"></div></div>
+      </div>
+
+      <div class="stat-card" onclick="openModal('sleepModal')">
+        <div class="stat-icon" style="background: rgba(236,72,153,0.15); color: var(--pink)">😴</div>
+        <div class="stat-label" data-i18n="sleep">Sleep</div>
+        <div class="stat-value"><span id="sleepCount">0</span><span class="stat-unit">hrs</span></div>
+        <div class="stat-bar"><div class="stat-bar-fill" id="sleepBar" style="background: var(--pink); width: 0%"></div></div>
+      </div>
+    </div>
+
+    <div class="streak-card">
+      <div class="streak-flame">🔥</div>
+      <div class="streak-info">
+        <div class="streak-number"><span id="streakDays">0</span> <span data-i18n="days">days</span></div>
+        <div class="streak-label" data-i18n="streakLabel">Keep the streak alive!</div>
+      </div>
+    </div>
+
+    <div class="quote-card">
+      <div class="quote-text" id="quoteText">"The body achieves what the mind believes."</div>
+      <div class="quote-author">— ZenFit</div>
+    </div>
+  </div>
+
+  <!-- WORKOUT PAGE -->
+  <div class="page" id="page-workout">
+    <div class="header" style="padding: 24px 0 16px;">
+      <div>
+        <div class="greeting" data-i18n="trainSection">Training</div>
+        <div class="username serif" data-i18n="workoutTitle">Workouts</div>
+      </div>
+    </div>
+
+    <div class="workout-categories" id="workoutCats"></div>
+    <div id="exerciseList"></div>
+  </div>
+
+  <!-- DIET PAGE -->
+  <div class="page" id="page-diet">
+    <div class="header" style="padding: 24px 0 16px;">
+      <div>
+        <div class="greeting" data-i18n="nutrition">Nutrition</div>
+        <div class="username serif" data-i18n="dietTitle">Today's Meals</div>
+      </div>
+    </div>
+
+    <div class="macro-card">
+      <div class="macro-total">
+        <div class="macro-total-value"><span id="totalCal">0</span></div>
+        <div class="macro-total-label"><span data-i18n="of">of</span> <span id="goalCal">2000</span> kcal</div>
+      </div>
+      <div class="macro-circles">
+        <div class="macro-item">
+          <div class="macro-circle">
+            <svg width="70" height="70">
+              <circle class="macro-circle-bg" cx="35" cy="35" r="28"/>
+              <circle class="macro-circle-fg" id="proteinCircle" cx="35" cy="35" r="28" stroke="var(--success)" stroke-dasharray="176" stroke-dashoffset="176"/>
+            </svg>
+            <div class="macro-value"><span id="proteinG">0</span>g</div>
+          </div>
+          <div class="macro-label" data-i18n="protein">Protein</div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-circle">
+            <svg width="70" height="70">
+              <circle class="macro-circle-bg" cx="35" cy="35" r="28"/>
+              <circle class="macro-circle-fg" id="carbsCircle" cx="35" cy="35" r="28" stroke="var(--warning)" stroke-dasharray="176" stroke-dashoffset="176"/>
+            </svg>
+            <div class="macro-value"><span id="carbsG">0</span>g</div>
+          </div>
+          <div class="macro-label" data-i18n="carbs">Carbs</div>
+        </div>
+        <div class="macro-item">
+          <div class="macro-circle">
+            <svg width="70" height="70">
+              <circle class="macro-circle-bg" cx="35" cy="35" r="28"/>
+              <circle class="macro-circle-fg" id="fatCircle" cx="35" cy="35" r="28" stroke="var(--pink)" stroke-dasharray="176" stroke-dashoffset="176"/>
+            </svg>
+            <div class="macro-value"><span id="fatG">0</span>g</div>
+          </div>
+          <div class="macro-label" data-i18n="fat">Fat</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="mealsList"></div>
+  </div>
+
+  <!-- PROGRESS PAGE -->
+  <div class="page" id="page-progress">
+    <div class="header" style="padding: 24px 0 16px;">
+      <div>
+        <div class="greeting" data-i18n="progressLabel">Your Journey</div>
+        <div class="username serif" data-i18n="progressTitle">Progress</div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-title" data-i18n="weightTrend">Weight Trend (7 days)</div>
+      <div class="chart-value"><span id="currentWeight">0</span> kg</div>
+      <svg class="chart-svg" id="weightChart" viewBox="0 0 320 140"></svg>
+    </div>
+
+    <div class="section-title" style="margin-top: 0;" data-i18n="measurements">Measurements</div>
+    <div class="measurements">
+      <div class="measurement">
+        <div class="measurement-label" data-i18n="chest">Chest</div>
+        <div class="measurement-value">- <span class="measurement-unit">cm</span></div>
+      </div>
+      <div class="measurement">
+        <div class="measurement-label" data-i18n="waist">Waist</div>
+        <div class="measurement-value">- <span class="measurement-unit">cm</span></div>
+      </div>
+      <div class="measurement">
+        <div class="measurement-label" data-i18n="arms">Arms</div>
+        <div class="measurement-value">- <span class="measurement-unit">cm</span></div>
+      </div>
+      <div class="measurement">
+        <div class="measurement-label" data-i18n="thighs">Thighs</div>
+        <div class="measurement-value">- <span class="measurement-unit">cm</span></div>
+      </div>
+    </div>
+
+    <div class="section-title" data-i18n="achievementsTitle">Achievements</div>
+    <div class="achievements" id="achievementsList"></div>
+  </div>
+
+  <!-- PROGRAMS PAGE -->
+  <div class="page" id="page-programs">
+    <div class="header" style="padding: 24px 0 16px;">
+      <div>
+        <div class="greeting" data-i18n="programsLabel">Transformation</div>
+        <div class="username serif" data-i18n="programsTitle">Programs</div>
+      </div>
+    </div>
+
+    <!-- Daily Challenge Card -->
+    <div id="dailyChallengeCard" class="hero-card" style="background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%); margin-bottom: 16px;">
+      <div class="hero-label" data-i18n="todayChallenge">Today's Challenge</div>
+      <div style="display: flex; align-items: center; gap: 16px; margin-top: 12px;">
+        <div style="font-size: 48px;" id="challengeIcon">💪</div>
+        <div style="flex: 1;">
+          <div style="font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.2;" id="challengeText">Loading...</div>
+        </div>
+      </div>
+      <button class="btn-primary" style="margin-top: 16px; background: rgba(0,0,0,0.2); color: #fff;" onclick="completeChallenge()" data-i18n="acceptChallenge">Accept Challenge ✓</button>
+    </div>
+
+    <!-- Daily Tip -->
+    <div class="quote-card" style="border-left-color: var(--blue);">
+      <div style="font-size: 11px; color: var(--blue); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; font-weight: 600;">💡 <span data-i18n="dailyTip">Daily Tip</span></div>
+      <div class="quote-text" id="dailyTipText" style="font-size: 16px;">Loading...</div>
+    </div>
+
+    <div class="section-title" data-i18n="choosePlan">Choose Your Plan</div>
+    <div id="bundlesList"></div>
+  </div>
+
+  <!-- PROFILE PAGE -->
+  <div class="page" id="page-profile">
+    <div class="header" style="padding: 24px 0 16px;">
+      <div>
+        <div class="greeting" data-i18n="account">Account</div>
+        <div class="username serif" data-i18n="profileTitle">Profile</div>
+      </div>
+    </div>
+
+    <div class="profile-header">
+      <div class="profile-avatar" id="profileAvatar">Z</div>
+      <div class="profile-name" id="profileName">User</div>
+      <div class="profile-meta"><span id="profileGoal">Goal</span> • <span id="profileBmi">BMI -</span></div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="profile-stat">
+        <div class="profile-stat-value" id="totalWorkouts">0</div>
+        <div class="profile-stat-label" data-i18n="workouts">Workouts</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-value" id="totalDays">0</div>
+        <div class="profile-stat-label" data-i18n="daysActive">Days</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-value" id="totalCalsBurned">0</div>
+        <div class="profile-stat-label" data-i18n="kcalBurned">Burned</div>
+      </div>
+    </div>
+
+    <div class="menu-list">
+      <div class="menu-item" onclick="switchPageDirect('progress')">
+        <div class="menu-item-icon">📊</div>
+        <div class="menu-item-text" data-i18n="navProgress">Progress</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item" onclick="openModal('timerModal')">
+        <div class="menu-item-icon">⏱️</div>
+        <div class="menu-item-text" data-i18n="hiitTimer">HIIT Timer</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item" onclick="openModal('reminderModal')">
+        <div class="menu-item-icon">🔔</div>
+        <div class="menu-item-text" data-i18n="reminders">Reminders</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item" onclick="exportData()">
+        <div class="menu-item-icon">📥</div>
+        <div class="menu-item-text" data-i18n="exportData">Export Data</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+      <div class="menu-item" onclick="resetApp()">
+        <div class="menu-item-icon">🔄</div>
+        <div class="menu-item-text" data-i18n="resetApp">Reset App</div>
+        <div class="menu-item-arrow">›</div>
+      </div>
+    </div>
+
+    <div style="text-align: center; color: var(--text-mute); font-size: 12px; padding: 20px 0;">
+      ZenFit v1.0 • Made with ❤️
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="switchPage('home', this)">
+      <div class="nav-icon">🏠</div>
+      <div class="nav-label" data-i18n="navHome">Home</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('programs', this)">
+      <div class="nav-icon">🎯</div>
+      <div class="nav-label" data-i18n="navPrograms">Plans</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('workout', this)">
+      <div class="nav-icon">💪</div>
+      <div class="nav-label" data-i18n="navWorkout">Workout</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('diet', this)">
+      <div class="nav-icon">🍎</div>
+      <div class="nav-label" data-i18n="navDiet">Diet</div>
+    </div>
+    <div class="nav-item" onclick="switchPage('profile', this)">
+      <div class="nav-icon">👤</div>
+      <div class="nav-label" data-i18n="navProfile">Profile</div>
+    </div>
+  </nav>
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal" id="stepsModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('stepsModal')">×</button>
+    <div class="modal-title" data-i18n="addSteps">Add Steps</div>
+    <input type="number" class="input" id="stepsInput" placeholder="Number of steps">
+    <button class="btn-primary" onclick="addSteps()" data-i18n="add">Add</button>
+  </div>
+</div>
+
+<div class="modal" id="waterModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('waterModal')">×</button>
+    <div class="modal-title" data-i18n="waterIntake">Water Intake</div>
+    <div class="water-glasses" id="waterGlasses"></div>
+    <p style="text-align: center; color: var(--text-dim); font-size: 13px;" data-i18n="tapGlass">Tap a glass to mark as filled</p>
+  </div>
+</div>
+
+<div class="modal" id="caloriesModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('caloriesModal')">×</button>
+    <div class="modal-title" data-i18n="addFood">Add Food</div>
+    <input type="text" class="input" id="foodSearch" placeholder="Search food..." oninput="filterFoods()">
+    <div class="food-list" id="foodList"></div>
+  </div>
+</div>
+
+<div class="modal" id="weightModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('weightModal')">×</button>
+    <div class="modal-title" data-i18n="logWeight">Log Weight</div>
+    <input type="number" step="0.1" class="input" id="weightInput" placeholder="Weight (kg)">
+    <button class="btn-primary" onclick="logWeight()" data-i18n="save">Save</button>
+  </div>
+</div>
+
+<div class="modal" id="sleepModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('sleepModal')">×</button>
+    <div class="modal-title" data-i18n="logSleep">Log Sleep</div>
+    <input type="number" step="0.5" class="input" id="sleepInput" placeholder="Hours slept">
+    <button class="btn-primary" onclick="logSleep()" data-i18n="save">Save</button>
+  </div>
+</div>
+
+<div class="modal" id="timerModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('timerModal')">×</button>
+    <div class="modal-title" data-i18n="hiitTimer">HIIT Timer</div>
+    <div class="timer-display">
+      <div class="timer-circle">
+        <svg viewBox="0 0 240 240">
+          <circle class="timer-bg" cx="120" cy="120" r="110"/>
+          <circle class="timer-fg" id="timerProgress" cx="120" cy="120" r="110" stroke-dasharray="691" stroke-dashoffset="0"/>
+        </svg>
+        <div class="timer-time" id="timerTime">00:30</div>
+      </div>
+      <div class="timer-controls">
+        <button class="timer-btn primary" onclick="toggleTimer()" id="timerToggle" data-i18n="start">Start</button>
+        <button class="timer-btn" onclick="resetTimer()" data-i18n="reset">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="reminderModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('reminderModal')">×</button>
+    <div class="modal-title" data-i18n="reminders">Reminders</div>
+    <p style="color: var(--text-dim); font-size: 14px; padding: 20px 0; text-align: center;" data-i18n="reminderNote">
+      Reminders will be added in the next update with notification permissions.
+    </p>
+  </div>
+</div>
+
+<div class="modal" id="exerciseModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('exerciseModal')">×</button>
+    <div id="exerciseDetail"></div>
+  </div>
+</div>
+
+<div class="modal" id="bundleModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('bundleModal')">×</button>
+    <div id="bundleDetail"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============ LANGUAGE ============
+const i18n = {
+  en: {
+    langBtn: 'हिंदी', tagline: 'Fitness Reimagined',
+    welcomeTitle: "What should we call you?", welcomeSub: "Let's personalize your journey",
+    namePlaceholder: 'Your name', continue: 'Continue', getStarted: 'Get Started',
+    goalTitle: "What's your goal?", goalSub: "We'll customize your plan",
+    goalLose: 'Lose Weight', goalLoseDesc: 'Burn fat & get lean',
+    goalGain: 'Build Muscle', goalGainDesc: 'Gain strength & mass',
+    goalMaintain: 'Stay Fit', goalMaintainDesc: 'Maintain & feel great',
+    bodyTitle: 'Tell us about you', bodySub: 'For accurate calculations',
+    male: 'Male', female: 'Female',
+    activityTitle: 'Activity level?', activitySub: 'How active are you daily?',
+    actLow: 'Sedentary', actLowDesc: 'Little to no exercise',
+    actMid: 'Moderate', actMidDesc: '3-5 days/week exercise',
+    actHigh: 'Very Active', actHighDesc: 'Daily intense exercise',
+    stepsToday: 'Steps Today', steps: 'steps', water: 'Water', calories: 'Calories',
+    weight: 'Weight', sleep: 'Sleep', days: 'days', streakLabel: 'Keep the streak alive!',
+    trainSection: 'Training', workoutTitle: 'Workouts',
+    nutrition: 'Nutrition', dietTitle: "Today's Meals", of: 'of',
+    protein: 'Protein', carbs: 'Carbs', fat: 'Fat',
+    progressLabel: 'Your Journey', progressTitle: 'Progress',
+    weightTrend: 'Weight Trend (7 days)', measurements: 'Measurements',
+    chest: 'Chest', waist: 'Waist', arms: 'Arms', thighs: 'Thighs',
+    achievementsTitle: 'Achievements',
+    account: 'Account', profileTitle: 'Profile',
+    workouts: 'Workouts', daysActive: 'Days', kcalBurned: 'Burned',
+    hiitTimer: 'HIIT Timer', reminders: 'Reminders',
+    exportData: 'Export Data', resetApp: 'Reset App',
+    navHome: 'Home', navWorkout: 'Workout', navDiet: 'Diet',
+    navProgress: 'Progress', navProfile: 'Profile', navPrograms: 'Plans',
+    programsLabel: 'Transformation', programsTitle: 'Programs',
+    todayChallenge: "Today's Challenge", acceptChallenge: 'Accept Challenge ✓',
+    dailyTip: 'Daily Tip', choosePlan: 'Choose Your Plan',
+    addSteps: 'Add Steps', add: 'Add',
+    waterIntake: 'Water Intake', tapGlass: 'Tap a glass to mark as filled',
+    addFood: 'Add Food', logWeight: 'Log Weight', save: 'Save',
+    logSleep: 'Log Sleep', start: 'Start', pause: 'Pause', reset: 'Reset',
+    reminderNote: 'Reminders will be added in the next update with notification permissions.',
+    breakfast: 'Breakfast', lunch: 'Lunch', snacks: 'Snacks', dinner: 'Dinner',
+    noFoodLogged: 'No food logged yet',
+    catChest: 'Chest', catBack: 'Back', catLegs: 'Legs',
+    catArms: 'Arms', catAbs: 'Abs', catCardio: 'Cardio',
+    morning: 'Good morning', afternoon: 'Good afternoon', evening: 'Good evening'
+  },
+  hi: {
+    langBtn: 'EN', tagline: 'फिटनेस का नया तरीका',
+    welcomeTitle: 'आपका नाम क्या है?', welcomeSub: 'अपनी यात्रा को व्यक्तिगत बनाएं',
+    namePlaceholder: 'आपका नाम', continue: 'आगे बढ़ें', getStarted: 'शुरू करें',
+    goalTitle: 'आपका लक्ष्य क्या है?', goalSub: 'हम आपकी योजना बनाएंगे',
+    goalLose: 'वजन घटाएं', goalLoseDesc: 'फैट कम करें',
+    goalGain: 'मसल्स बनाएं', goalGainDesc: 'ताकत और मास बढ़ाएं',
+    goalMaintain: 'फिट रहें', goalMaintainDesc: 'स्वस्थ और मजबूत रहें',
+    bodyTitle: 'अपने बारे में बताएं', bodySub: 'सटीक गणना के लिए',
+    male: 'पुरुष', female: 'महिला',
+    activityTitle: 'कितने सक्रिय हैं?', activitySub: 'रोज़ाना की गतिविधि',
+    actLow: 'बहुत कम', actLowDesc: 'व्यायाम बहुत कम',
+    actMid: 'मध्यम', actMidDesc: 'हफ्ते में 3-5 दिन',
+    actHigh: 'बहुत ज़्यादा', actHighDesc: 'रोज़ कठिन व्यायाम',
+    stepsToday: 'आज के कदम', steps: 'कदम', water: 'पानी', calories: 'कैलोरी',
+    weight: 'वजन', sleep: 'नींद', days: 'दिन', streakLabel: 'सिलसिला जारी रखें!',
+    trainSection: 'ट्रेनिंग', workoutTitle: 'वर्कआउट',
+    nutrition: 'पोषण', dietTitle: 'आज का भोजन', of: '/',
+    protein: 'प्रोटीन', carbs: 'कार्ब्स', fat: 'फैट',
+    progressLabel: 'आपकी यात्रा', progressTitle: 'प्रगति',
+    weightTrend: 'वजन (7 दिन)', measurements: 'माप',
+    chest: 'छाती', waist: 'कमर', arms: 'बाजू', thighs: 'जांघ',
+    achievementsTitle: 'उपलब्धियां',
+    account: 'खाता', profileTitle: 'प्रोफाइल',
+    workouts: 'वर्कआउट', daysActive: 'दिन', kcalBurned: 'बर्न',
+    hiitTimer: 'HIIT टाइमर', reminders: 'रिमाइंडर',
+    exportData: 'डेटा निर्यात', resetApp: 'ऐप रीसेट',
+    navHome: 'होम', navWorkout: 'वर्कआउट', navDiet: 'डाइट',
+    navProgress: 'प्रगति', navProfile: 'प्रोफाइल', navPrograms: 'प्लान्स',
+    programsLabel: 'बदलाव', programsTitle: 'प्रोग्राम्स',
+    todayChallenge: 'आज की चुनौती', acceptChallenge: 'चुनौती स्वीकार ✓',
+    dailyTip: 'आज का टिप', choosePlan: 'अपना प्लान चुनें',
+    addSteps: 'कदम जोड़ें', add: 'जोड़ें',
+    waterIntake: 'पानी का सेवन', tapGlass: 'गिलास पर टैप करें',
+    addFood: 'भोजन जोड़ें', logWeight: 'वजन दर्ज करें', save: 'सेव करें',
+    logSleep: 'नींद दर्ज करें', start: 'शुरू', pause: 'रोकें', reset: 'रीसेट',
+    reminderNote: 'अगले अपडेट में रिमाइंडर जोड़े जाएंगे।',
+    breakfast: 'नाश्ता', lunch: 'दोपहर का भोजन', snacks: 'स्नैक्स', dinner: 'रात का भोजन',
+    noFoodLogged: 'अभी कोई भोजन दर्ज नहीं',
+    catChest: 'छाती', catBack: 'पीठ', catLegs: 'पैर',
+    catArms: 'बाजू', catAbs: 'पेट', catCardio: 'कार्डियो',
+    morning: 'सुप्रभात', afternoon: 'नमस्ते', evening: 'शुभ संध्या'
+  }
+};
+
+let currentLang = localStorage.getItem('zenfit_lang') || 'en';
+
+function applyLang() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (i18n[currentLang][key]) el.textContent = i18n[currentLang][key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.dataset.i18nPlaceholder;
+    if (key && i18n[currentLang][key]) el.placeholder = i18n[currentLang][key];
+  });
+}
+
+function toggleLang() {
+  currentLang = currentLang === 'en' ? 'hi' : 'en';
+  localStorage.setItem('zenfit_lang', currentLang);
+  applyLang();
+  renderAll();
+}
+
+// ============ STATE ============
+let state = JSON.parse(localStorage.getItem('zenfit_state')) || {
+  user: null, steps: 0, water: 0, sleep: 0, weight: 0,
+  meals: { breakfast: [], lunch: [], snacks: [], dinner: [] },
+  weightHistory: [], streak: 0, lastActiveDate: null,
+  totalWorkouts: 0, totalCalsBurned: 0, totalDays: 0,
+  achievements: [], activeBundle: null, bundleProgress: {},
+  challengesCompleted: [], lastChallengeDate: null,
+  dayTasks: {}
+};
+
+function save() { localStorage.setItem('zenfit_state', JSON.stringify(state)); }
+
+// ============ ONBOARDING ============
+let onboardingData = {};
+let currentStep = 1;
+
+function nextStep(step) {
+  if (currentStep === 1) {
+    const name = document.getElementById('userName').value.trim();
+    if (!name) { showToast('Please enter your name'); return; }
+    onboardingData.name = name;
+  }
+  if (currentStep === 3) {
+    const age = document.getElementById('userAge').value;
+    const gender = document.getElementById('userGender').value;
+    const height = document.getElementById('userHeight').value;
+    const weight = document.getElementById('userWeight').value;
+    if (!age || !height || !weight) { showToast('Please fill all fields'); return; }
+    Object.assign(onboardingData, { age: +age, gender, height: +height, weight: +weight });
+  }
+  document.getElementById(`step${currentStep}`).classList.remove('active');
+  document.getElementById(`step${step}`).classList.add('active');
+  document.querySelectorAll('.ob-dot')[step-1].classList.add('active');
+  currentStep = step;
+}
+
+function selectGoal(el, goal) {
+  document.querySelectorAll('#step2 .ob-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  onboardingData.goal = goal;
+}
+
+function selectActivity(el, factor) {
+  document.querySelectorAll('#step4 .ob-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  onboardingData.activity = factor;
+}
+
+function calculateBMR(d) {
+  const bmr = d.gender === 'male'
+    ? 10 * d.weight + 6.25 * d.height - 5 * d.age + 5
+    : 10 * d.weight + 6.25 * d.height - 5 * d.age - 161;
+  let goalCal = bmr * (d.activity || 1.2);
+  if (d.goal === 'lose') goalCal -= 500;
+  if (d.goal === 'gain') goalCal += 500;
+  return Math.round(goalCal);
+}
+
+function finishOnboarding() {
+  if (!onboardingData.goal) { showToast('Please select a goal'); return; }
+  if (!onboardingData.activity) { showToast('Please select activity level'); return; }
+  onboardingData.goalCal = calculateBMR(onboardingData);
+  state.user = onboardingData;
+  state.weight = onboardingData.weight;
+  state.weightHistory = [{ date: new Date().toISOString().split('T')[0], weight: onboardingData.weight }];
+  save();
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.add('visible');
+  initApp();
+}
+
+// ============ FOOD DATABASE ============
+const foods = [
+  // Indian foods
+  { name: 'Roti (1)', cal: 120, p: 3, c: 18, f: 3 },
+  { name: 'Rice (1 cup)', cal: 200, p: 4, c: 45, f: 0 },
+  { name: 'Dal (1 bowl)', cal: 150, p: 9, c: 20, f: 5 },
+  { name: 'Paneer (100g)', cal: 265, p: 18, c: 6, f: 20 },
+  { name: 'Chicken Curry (1 bowl)', cal: 280, p: 25, c: 8, f: 18 },
+  { name: 'Idli (2)', cal: 78, p: 2, c: 17, f: 0 },
+  { name: 'Dosa (1)', cal: 168, p: 4, c: 25, f: 6 },
+  { name: 'Samosa (1)', cal: 252, p: 4, c: 24, f: 17 },
+  { name: 'Poha (1 plate)', cal: 250, p: 5, c: 45, f: 6 },
+  { name: 'Upma (1 bowl)', cal: 250, p: 6, c: 40, f: 8 },
+  { name: 'Chapati (1)', cal: 104, p: 3, c: 18, f: 3 },
+  { name: 'Biryani (1 plate)', cal: 290, p: 9, c: 40, f: 10 },
+  { name: 'Curd (1 bowl)', cal: 98, p: 11, c: 4, f: 5 },
+  { name: 'Lassi (1 glass)', cal: 260, p: 8, c: 30, f: 12 },
+  // International
+  { name: 'Egg (1 boiled)', cal: 78, p: 6, c: 1, f: 5 },
+  { name: 'Chicken Breast (100g)', cal: 165, p: 31, c: 0, f: 4 },
+  { name: 'Banana (1)', cal: 105, p: 1, c: 27, f: 0 },
+  { name: 'Apple (1)', cal: 95, p: 0, c: 25, f: 0 },
+  { name: 'Oats (1 bowl)', cal: 150, p: 5, c: 27, f: 3 },
+  { name: 'Milk (1 glass)', cal: 150, p: 8, c: 12, f: 8 },
+  { name: 'Bread (2 slices)', cal: 160, p: 6, c: 30, f: 2 },
+  { name: 'Peanut Butter (1 tbsp)', cal: 95, p: 4, c: 3, f: 8 },
+  { name: 'Almonds (10)', cal: 70, p: 3, c: 2, f: 6 },
+  { name: 'Pizza (1 slice)', cal: 285, p: 12, c: 36, f: 10 },
+  { name: 'Burger', cal: 354, p: 17, c: 30, f: 17 },
+  { name: 'Pasta (1 plate)', cal: 220, p: 8, c: 43, f: 1 },
+  { name: 'Salad (1 bowl)', cal: 100, p: 3, c: 10, f: 5 },
+  { name: 'Protein Shake', cal: 150, p: 25, c: 5, f: 2 },
+];
+
+let currentMealType = 'breakfast';
+
+// ============ EXERCISES ============
+const exercises = {
+  chest: [
+    { name: 'Push Ups', icon: '💪', sets: '3 x 12', cal: 50, desc: 'Classic chest exercise. Keep your body straight, lower until chest nearly touches floor.' },
+    { name: 'Bench Press', icon: '🏋️', sets: '4 x 10', cal: 80, desc: 'Lie on bench, lower bar to chest, push up. Keep elbows at 45 degrees.' },
+    { name: 'Dumbbell Fly', icon: '🤸', sets: '3 x 12', cal: 60, desc: 'Lie on bench, arms wide, bring dumbbells together over chest.' },
+    { name: 'Incline Press', icon: '⬆️', sets: '3 x 10', cal: 70, desc: 'Bench at 30-45 degrees. Targets upper chest.' },
+  ],
+  back: [
+    { name: 'Pull Ups', icon: '🆙', sets: '3 x 8', cal: 70, desc: 'Hang from bar, pull body up until chin over bar.' },
+    { name: 'Deadlift', icon: '🏋️‍♂️', sets: '4 x 6', cal: 120, desc: 'King of all exercises. Keep back straight, lift with legs.' },
+    { name: 'Barbell Row', icon: '🚣', sets: '3 x 10', cal: 80, desc: 'Bend over, pull bar to lower chest. Squeeze shoulder blades.' },
+    { name: 'Lat Pulldown', icon: '⬇️', sets: '3 x 12', cal: 60, desc: 'Pull bar down to upper chest. Focus on lats.' },
+  ],
+  legs: [
+    { name: 'Squats', icon: '🦵', sets: '4 x 12', cal: 100, desc: 'Feet shoulder-width, lower until thighs parallel to floor.' },
+    { name: 'Lunges', icon: '🚶', sets: '3 x 12', cal: 80, desc: 'Step forward, lower back knee toward floor. Alternate legs.' },
+    { name: 'Leg Press', icon: '🦿', sets: '4 x 10', cal: 90, desc: 'Push platform away with legs. Don\'t lock knees.' },
+    { name: 'Calf Raises', icon: '👟', sets: '3 x 20', cal: 40, desc: 'Rise on toes, hold, lower slowly.' },
+  ],
+  arms: [
+    { name: 'Bicep Curls', icon: '💪', sets: '3 x 12', cal: 50, desc: 'Curl dumbbells up, keep elbows fixed at sides.' },
+    { name: 'Tricep Dips', icon: '🤲', sets: '3 x 10', cal: 60, desc: 'Use bench or parallel bars. Lower body, push back up.' },
+    { name: 'Hammer Curls', icon: '🔨', sets: '3 x 12', cal: 50, desc: 'Curl with palms facing each other.' },
+    { name: 'Tricep Extension', icon: '🆙', sets: '3 x 12', cal: 50, desc: 'Extend arm overhead, lower behind head.' },
+  ],
+  abs: [
+    { name: 'Crunches', icon: '🔥', sets: '3 x 20', cal: 40, desc: 'Lie down, lift shoulders off floor, squeeze abs.' },
+    { name: 'Plank', icon: '➖', sets: '3 x 60s', cal: 50, desc: 'Hold forearm plank. Keep body straight.' },
+    { name: 'Leg Raises', icon: '🦵', sets: '3 x 15', cal: 50, desc: 'Lie down, raise legs to 90 degrees, lower slowly.' },
+    { name: 'Russian Twists', icon: '🔄', sets: '3 x 20', cal: 40, desc: 'Sit, lean back, twist torso side to side.' },
+  ],
+  cardio: [
+    { name: 'Running', icon: '🏃', sets: '20 mins', cal: 200, desc: 'Steady pace cardio. Great for fat loss.' },
+    { name: 'Jumping Jacks', icon: '🤸', sets: '3 x 50', cal: 60, desc: 'Full body warm up exercise.' },
+    { name: 'Burpees', icon: '💥', sets: '3 x 10', cal: 80, desc: 'Squat, jump back to plank, push up, jump up.' },
+    { name: 'Mountain Climbers', icon: '⛰️', sets: '3 x 30', cal: 70, desc: 'Plank position, alternate knees to chest fast.' },
+  ]
+};
+
+let currentCat = 'chest';
+
+// ============ PROGRAM BUNDLES ============
+const bundles = [
+  {
+    id: 'wl_beginner', icon: '🔥', color: '#ff4757',
+    name: 'Weight Loss Starter', nameHi: 'वजन घटाएं - शुरुआत',
+    duration: 30, level: 'Beginner', goal: '3-4 kg loss',
+    desc: 'Perfect for beginners. Mix of cardio + simple exercises with calorie deficit diet.',
+    descHi: 'शुरुआत करने वालों के लिए। कार्डियो + आसान व्यायाम और कम कैलोरी डाइट।',
+    workout: ['Jumping Jacks 3x30', 'Push Ups 3x10', 'Squats 3x15', 'Plank 3x30s', 'Walking 30 mins'],
+    diet: ['Breakfast: Oats + Banana (300 kcal)', 'Lunch: 2 Roti + Dal + Salad (450 kcal)', 'Snack: Apple + Almonds (200 kcal)', 'Dinner: Grilled Chicken/Paneer + Veggies (400 kcal)'],
+    tips: 'Drink 3L water daily. No sugar. Sleep 7-8 hours.',
+    tipsHi: 'रोज़ 3L पानी पिएं। चीनी बंद। 7-8 घंटे सोएं।'
+  },
+  {
+    id: 'wl_pro', icon: '⚡', color: '#ff6348',
+    name: 'Weight Loss Pro', nameHi: 'वजन घटाएं - प्रो',
+    duration: 60, level: 'Intermediate', goal: '6-8 kg loss',
+    desc: 'Serious fat burning with HIIT workouts and strict meal planning.',
+    descHi: 'HIIT वर्कआउट और सख्त डाइट के साथ तेज़ी से फैट बर्न।',
+    workout: ['Burpees 4x15', 'Mountain Climbers 4x30', 'Squat Jumps 4x20', 'Push Ups 4x15', 'Running 45 mins'],
+    diet: ['Breakfast: 3 Egg Whites + Oats (250 kcal)', 'Lunch: 1 Roti + Chicken/Paneer + Salad (400 kcal)', 'Snack: Green Tea + Nuts (150 kcal)', 'Dinner: Soup + Grilled Veggies (300 kcal)'],
+    tips: 'Cardio 5 days/week. Track every meal. Cheat meal once a week only.',
+    tipsHi: 'हफ्ते में 5 दिन कार्डियो। हर मील ट्रैक करें।'
+  },
+  {
+    id: 'muscle', icon: '💪', color: '#c4ff3d',
+    name: 'Muscle Builder', nameHi: 'मसल्स बनाएं',
+    duration: 45, level: 'Intermediate', goal: 'Gain 3-5 kg muscle',
+    desc: 'Heavy lifting + protein-rich diet for serious mass gain.',
+    descHi: 'भारी वज़न और प्रोटीन डाइट से मसल्स बनाएं।',
+    workout: ['Bench Press 4x8', 'Deadlift 4x6', 'Squats 4x10', 'Pull Ups 4x8', 'Bicep Curls 3x12'],
+    diet: ['Breakfast: 4 Eggs + Oats + Banana (600 kcal)', 'Lunch: 3 Roti + Chicken + Dal + Curd (800 kcal)', 'Snack: Protein Shake + Peanut Butter (400 kcal)', 'Dinner: Rice + Fish/Paneer + Veggies (700 kcal)'],
+    tips: 'Eat 1.6g protein per kg bodyweight. Sleep 8+ hours. Lift heavy.',
+    tipsHi: 'प्रति किलो शरीर के वज़न पर 1.6g प्रोटीन। 8+ घंटे नींद।'
+  },
+  {
+    id: 'abs', icon: '🎯', color: '#ffa502',
+    name: '6-Pack Abs', nameHi: '6-पैक एब्स',
+    duration: 30, level: 'Intermediate', goal: 'Visible abs',
+    desc: 'Core-focused workouts + clean eating to reveal your abs.',
+    descHi: 'एब्स दिखाने के लिए कोर वर्कआउट और साफ डाइट।',
+    workout: ['Crunches 4x25', 'Plank 4x60s', 'Leg Raises 4x20', 'Russian Twists 4x30', 'Bicycle Crunches 4x20'],
+    diet: ['Breakfast: Egg Whites + Oats (300 kcal)', 'Lunch: Brown Rice + Chicken + Salad (450 kcal)', 'Snack: Greek Yogurt (150 kcal)', 'Dinner: Grilled Fish + Veggies (350 kcal)'],
+    tips: 'Abs are made in the kitchen. Cut sugar completely.',
+    tipsHi: 'एब्स किचन में बनते हैं। चीनी पूरी तरह बंद।'
+  },
+  {
+    id: 'home', icon: '🏠', color: '#4facfe',
+    name: 'Home Workout', nameHi: 'घर पर वर्कआउट',
+    duration: 21, level: 'Beginner', goal: 'No equipment needed',
+    desc: 'Get fit at home with zero equipment. Bodyweight only.',
+    descHi: 'बिना किसी सामान के घर पर फिट बनें।',
+    workout: ['Push Ups 3x12', 'Squats 3x20', 'Lunges 3x15', 'Plank 3x45s', 'Jumping Jacks 3x40'],
+    diet: ['Breakfast: Poha/Upma (350 kcal)', 'Lunch: 2 Roti + Sabzi + Dal (500 kcal)', 'Snack: Fruit + Tea (150 kcal)', 'Dinner: Khichdi + Curd (400 kcal)'],
+    tips: 'Consistency beats intensity. Show up daily.',
+    tipsHi: 'रोज़ करना ज़रूरी है। मेहनत से ज़्यादा निरंतरता।'
+  },
+  {
+    id: 'office', icon: '💼', color: '#a78bfa',
+    name: 'Office Worker Fix', nameHi: 'ऑफिस वर्कर फिटनेस',
+    duration: 14, level: 'Beginner', goal: 'Reduce back pain',
+    desc: 'Quick 20-min workouts for desk workers. Fix posture and energy.',
+    descHi: 'डेस्क वर्कर्स के लिए 20 मिनट के वर्कआउट।',
+    workout: ['Neck Rolls 2x10', 'Shoulder Shrugs 2x15', 'Cat-Cow Stretch 2x10', 'Wall Push Ups 3x15', 'Walking 20 mins'],
+    diet: ['Breakfast: Fruits + Nuts (300 kcal)', 'Lunch: Light Roti + Sabzi (400 kcal)', 'Snack: Green Tea + Biscuits (150 kcal)', 'Dinner: Soup + Salad (300 kcal)'],
+    tips: 'Stand up every 30 mins. Stretch hourly.',
+    tipsHi: 'हर 30 मिनट में उठें। हर घंटे स्ट्रेच करें।'
+  },
+  {
+    id: 'yoga', icon: '🧘', color: '#ec4899',
+    name: 'Yoga & Flexibility', nameHi: 'योग और लचीलापन',
+    duration: 30, level: 'All Levels', goal: 'Flexibility + calm',
+    desc: 'Daily yoga for flexibility, strength, and mental peace.',
+    descHi: 'लचीलापन, ताकत और मानसिक शांति के लिए दैनिक योग।',
+    workout: ['Surya Namaskar 5 rounds', 'Warrior Pose 3x30s each side', 'Tree Pose 2x30s', 'Cobra Pose 3x20s', 'Child Pose 3 mins'],
+    diet: ['Breakfast: Sprouts + Fruits (300 kcal)', 'Lunch: Brown Rice + Dal + Sabzi (450 kcal)', 'Snack: Coconut Water + Nuts (200 kcal)', 'Dinner: Khichdi + Salad (350 kcal)'],
+    tips: 'Practice early morning. Breathe deeply. Stay vegetarian.',
+    tipsHi: 'सुबह जल्दी करें। गहरी सांस लें।'
+  },
+  {
+    id: 'hiit', icon: '💥', color: '#ff4757',
+    name: 'HIIT Fat Burner', nameHi: 'HIIT फैट बर्नर',
+    duration: 21, level: 'Advanced', goal: 'Quick fat loss',
+    desc: 'Intense 25-min HIIT sessions to torch calories fast.',
+    descHi: '25 मिनट के तीव्र HIIT सेशन।',
+    workout: ['Burpees 5x10', 'Jump Squats 5x15', 'High Knees 5x30s', 'Push Ups 5x10', 'Plank Jacks 5x20'],
+    diet: ['Breakfast: Protein Shake + Banana (350 kcal)', 'Lunch: Chicken/Paneer Salad (400 kcal)', 'Snack: Boiled Eggs (150 kcal)', 'Dinner: Grilled Veggies + Tofu (300 kcal)'],
+    tips: 'Rest 1 day per week. Hydrate heavily. Sleep is key.',
+    tipsHi: 'हफ्ते में 1 दिन आराम। खूब पानी पिएं।'
+  },
+  {
+    id: 'bulk', icon: '🦾', color: '#8fb82e',
+    name: 'Skinny to Fit', nameHi: 'पतले से फिट',
+    duration: 60, level: 'Beginner', goal: 'Gain 4-6 kg',
+    desc: 'For skinny guys/girls who want to gain healthy weight.',
+    descHi: 'पतले लोगों के लिए स्वस्थ वज़न बढ़ाने का प्लान।',
+    workout: ['Push Ups 3x10', 'Squats 4x12', 'Bench Press 4x8', 'Pull Ups 3x6', 'Shoulder Press 3x10'],
+    diet: ['Breakfast: 4 Eggs + 2 Toast + Milk (700 kcal)', 'Lunch: 4 Roti + Dal + Sabzi + Curd (900 kcal)', 'Snack: Banana Shake + Nuts (500 kcal)', 'Dinner: Rice + Chicken/Paneer (800 kcal)'],
+    tips: 'Eat every 3 hours. Calorie surplus is must. Lift heavy.',
+    tipsHi: 'हर 3 घंटे में खाएं। कैलोरी ज़्यादा लें।'
+  },
+  {
+    id: 'transform', icon: '🏆', color: '#ffd700',
+    name: 'Total Transformation', nameHi: 'पूर्ण बदलाव',
+    duration: 90, level: 'All Levels', goal: 'Complete change',
+    desc: 'The ultimate 90-day program. Body + mind transformation.',
+    descHi: '90 दिन का पूर्ण बदलाव कार्यक्रम।',
+    workout: ['Week 1-4: Full body 5x/week', 'Week 5-8: Split routine', 'Week 9-12: Advanced + cardio', 'Daily: 30 min cardio', 'Sunday: Rest + meal prep'],
+    diet: ['Breakfast: Balanced macros (400 kcal)', 'Lunch: Lean protein + carbs (550 kcal)', 'Snack: Healthy fats + protein (250 kcal)', 'Dinner: Light protein + veggies (400 kcal)'],
+    tips: 'This is a journey. Track weekly photos. Trust the process.',
+    tipsHi: 'यह एक यात्रा है। साप्ताहिक फोटो लें।'
+  }
+];
+
+// ============ DAILY TIPS ============
+const dailyTips = [
+  { en: 'Drink water before every meal to eat 30% less.', hi: 'हर भोजन से पहले पानी पिएं, 30% कम खाएंगे।' },
+  { en: 'Sleep 7-9 hours. Bad sleep = weight gain.', hi: '7-9 घंटे सोएं। कम नींद से वज़न बढ़ता है।' },
+  { en: 'Walk 10 mins after every meal.', hi: 'हर भोजन के बाद 10 मिनट टहलें।' },
+  { en: 'Protein at every meal keeps you full.', hi: 'हर भोजन में प्रोटीन भूख कम करता है।' },
+  { en: 'Avoid sugar drinks. Drink lemon water instead.', hi: 'मीठी ड्रिंक्स छोड़ें। नींबू पानी पिएं।' },
+  { en: 'Compound exercises burn more calories.', hi: 'कंपाउंड एक्सरसाइज़ ज़्यादा कैलोरी जलाती हैं।' },
+  { en: 'Rest days are growth days for muscles.', hi: 'आराम के दिन मसल्स बढ़ते हैं।' },
+];
+
+// ============ DAILY CHALLENGES ============
+const challenges = [
+  { en: 'Do 50 push ups today (any way)', hi: 'आज 50 पुश-अप्स करें', icon: '💪' },
+  { en: 'Walk 10,000 steps today', hi: 'आज 10,000 कदम चलें', icon: '👟' },
+  { en: 'Drink 4 liters of water', hi: '4 लीटर पानी पिएं', icon: '💧' },
+  { en: 'Hold a 2-minute plank', hi: '2 मिनट का प्लैंक', icon: '🔥' },
+  { en: 'No sugar for 24 hours', hi: '24 घंटे चीनी नहीं', icon: '🚫' },
+  { en: 'Do 100 squats throughout the day', hi: 'पूरे दिन में 100 स्क्वाट्स', icon: '🦵' },
+  { en: 'Sleep by 10:30 PM tonight', hi: 'रात 10:30 तक सो जाएं', icon: '😴' },
+];
+
+// ============ ACHIEVEMENTS ============
+const achievementsList = [
+  { id: 'first_step', icon: '👟', name: 'First Step', check: s => s.steps > 0 },
+  { id: 'water_hero', icon: '💧', name: 'Hydrated', check: s => s.water >= 8 },
+  { id: 'streak_3', icon: '🔥', name: '3 Day Streak', check: s => s.streak >= 3 },
+  { id: 'streak_7', icon: '⚡', name: 'Week Strong', check: s => s.streak >= 7 },
+  { id: 'streak_30', icon: '🏆', name: 'Month Master', check: s => s.streak >= 30 },
+  { id: 'workout_10', icon: '💪', name: '10 Workouts', check: s => s.totalWorkouts >= 10 },
+  { id: 'cal_1000', icon: '🔥', name: '1K Burned', check: s => s.totalCalsBurned >= 1000 },
+  { id: 'steps_10k', icon: '🎯', name: '10K Steps', check: s => s.steps >= 10000 },
+  { id: 'sleep_8', icon: '😴', name: 'Well Rested', check: s => s.sleep >= 8 },
+];
+
+// ============ QUOTES ============
+const quotes = [
+  "The body achieves what the mind believes.",
+  "Sweat is fat crying.",
+  "Success starts with self-discipline.",
+  "Don't stop when you're tired. Stop when you're done.",
+  "Your only limit is you.",
+  "Push yourself, no one else will.",
+  "The pain you feel today is the strength you feel tomorrow.",
+  "Wake up. Work out. Look hot. Kick ass.",
+];
+
+// ============ APP FUNCTIONS ============
+function initApp() {
+  applyLang();
+  applyTheme();
+  setGreeting();
+  document.getElementById('displayName').textContent = state.user.name;
+  document.getElementById('profileName').textContent = state.user.name;
+  document.getElementById('profileAvatar').textContent = state.user.name[0].toUpperCase();
+  document.getElementById('profileGoal').textContent = i18n[currentLang]['goal' + state.user.goal.charAt(0).toUpperCase() + state.user.goal.slice(1)];
+  const bmi = (state.user.weight / Math.pow(state.user.height/100, 2)).toFixed(1);
+  document.getElementById('profileBmi').textContent = 'BMI ' + bmi;
+  document.getElementById('goalCal').textContent = state.user.goalCal;
+  document.getElementById('stepsGoal').textContent = '10000';
+  
+  checkStreak();
+  renderAll();
+  renderWaterGlasses();
+  renderWorkoutCats();
+  renderExercises();
+  renderMeals();
+  renderFoods();
+  renderWeightChart();
+  renderAchievements();
+  renderBundles();
+  renderDailyChallenge();
+  renderDailyTip();
+  setRandomQuote();
+}
+
+function setGreeting() {
+  const hour = new Date().getHours();
+  let key = 'morning';
+  if (hour >= 12 && hour < 17) key = 'afternoon';
+  else if (hour >= 17) key = 'evening';
+  document.getElementById('greeting').textContent = i18n[currentLang][key];
+}
+
+function setRandomQuote() {
+  document.getElementById('quoteText').textContent = '"' + quotes[Math.floor(Math.random()*quotes.length)] + '"';
+}
+
+function checkStreak() {
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  if (state.lastActiveDate === today) return;
+  if (state.lastActiveDate === yesterday) state.streak++;
+  else if (state.lastActiveDate !== today) state.streak = 1;
+  state.lastActiveDate = today;
+  state.totalDays++;
+  save();
+}
+
+function renderAll() {
+  // Steps
+  document.getElementById('stepsCount').textContent = state.steps.toLocaleString();
+  const stepsPct = Math.min(100, (state.steps/10000)*100);
+  document.getElementById('stepsBar').style.width = stepsPct + '%';
+  document.getElementById('stepsKcal').textContent = Math.round(state.steps * 0.04);
+  document.getElementById('stepsKm').textContent = (state.steps * 0.0008).toFixed(1);
+
+  // Water
+  document.getElementById('waterCount').textContent = state.water;
+  document.getElementById('waterBar').style.width = Math.min(100, (state.water/8)*100) + '%';
+
+  // Calories
+  let totalCal = 0, totalP = 0, totalC = 0, totalF = 0;
+  Object.values(state.meals).forEach(meal => {
+    meal.forEach(item => {
+      totalCal += item.cal; totalP += item.p; totalC += item.c; totalF += item.f;
+    });
+  });
+  document.getElementById('caloriesCount').textContent = totalCal;
+  document.getElementById('caloriesBar').style.width = Math.min(100, (totalCal/state.user.goalCal)*100) + '%';
+  document.getElementById('totalCal').textContent = totalCal;
+  document.getElementById('proteinG').textContent = totalP;
+  document.getElementById('carbsG').textContent = totalC;
+  document.getElementById('fatG').textContent = totalF;
+  
+  // Macro circles
+  const proteinGoal = state.user.weight * 1.6;
+  const carbGoal = state.user.goalCal * 0.5 / 4;
+  const fatGoal = state.user.goalCal * 0.25 / 9;
+  setCircleProgress('proteinCircle', totalP/proteinGoal);
+  setCircleProgress('carbsCircle', totalC/carbGoal);
+  setCircleProgress('fatCircle', totalF/fatGoal);
+
+  // Weight & Sleep
+  document.getElementById('weightDisplay').textContent = state.weight;
+  document.getElementById('currentWeight').textContent = state.weight;
+  document.getElementById('sleepCount').textContent = state.sleep;
+  document.getElementById('sleepBar').style.width = Math.min(100, (state.sleep/8)*100) + '%';
+  document.getElementById('streakDays').textContent = state.streak;
+  
+  // Profile stats
+  document.getElementById('totalWorkouts').textContent = state.totalWorkouts;
+  document.getElementById('totalDays').textContent = state.totalDays;
+  document.getElementById('totalCalsBurned').textContent = state.totalCalsBurned;
+  
+  renderMeals();
+  renderWeightChart();
+  renderAchievements();
+}
+
+function setCircleProgress(id, pct) {
+  const c = 176;
+  const offset = c - Math.min(c, c * pct);
+  document.getElementById(id).style.strokeDashoffset = offset;
+}
+
+function switchPage(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  // Re-render content for the active page so data always shows
+  if (name === 'workout') { renderWorkoutCats(); renderExercises(); }
+  if (name === 'diet') { renderMeals(); }
+  if (name === 'progress') { renderWeightChart(); renderAchievements(); }
+  if (name === 'programs') { renderBundles(); renderDailyChallenge(); renderDailyTip(); }
+}
+
+// Steps
+function addSteps() {
+  const v = +document.getElementById('stepsInput').value;
+  if (!v) return;
+  state.steps += v;
+  document.getElementById('stepsInput').value = '';
+  save(); renderAll(); closeModal('stepsModal');
+  showToast('+' + v + ' steps');
+}
+
+// Water
+function renderWaterGlasses() {
+  const c = document.getElementById('waterGlasses');
+  c.innerHTML = '';
+  for (let i = 0; i < 8; i++) {
+    const g = document.createElement('div');
+    g.className = 'water-glass' + (i < state.water ? ' filled' : '');
+    g.innerHTML = i < state.water ? '💧' : '🥛';
+    g.onclick = () => { state.water = i + 1; save(); renderAll(); renderWaterGlasses(); };
+    c.appendChild(g);
+  }
+}
+
+// Weight
+function logWeight() {
+  const v = +document.getElementById('weightInput').value;
+  if (!v) return;
+  state.weight = v;
+  state.weightHistory.push({ date: new Date().toISOString().split('T')[0], weight: v });
+  if (state.weightHistory.length > 30) state.weightHistory.shift();
+  save(); renderAll(); closeModal('weightModal');
+  showToast('Weight logged');
+}
+
+// Sleep
+function logSleep() {
+  const v = +document.getElementById('sleepInput').value;
+  if (!v) return;
+  state.sleep = v;
+  save(); renderAll(); closeModal('sleepModal');
+  showToast('Sleep logged');
+}
+
+// Foods
+function renderFoods(filter = '') {
+  const list = document.getElementById('foodList');
+  list.innerHTML = '';
+  foods.filter(f => f.name.toLowerCase().includes(filter.toLowerCase())).forEach(f => {
+    const el = document.createElement('div');
+    el.className = 'food-item';
+    el.innerHTML = `<div class="food-name">${f.name}</div><div class="food-cal">${f.cal} kcal</div>`;
+    el.onclick = () => addFoodToMeal(f);
+    list.appendChild(el);
+  });
+}
+
+function filterFoods() { renderFoods(document.getElementById('foodSearch').value); }
+
+function addFoodToMeal(food) {
+  state.meals[currentMealType].push(food);
+  save(); renderAll(); closeModal('caloriesModal');
+  showToast('+' + food.cal + ' kcal');
+}
+
+function openMealAdd(type) {
+  currentMealType = type;
+  openModal('caloriesModal');
+}
+
+function renderMeals() {
+  const types = ['breakfast', 'lunch', 'snacks', 'dinner'];
+  const c = document.getElementById('mealsList');
+  c.innerHTML = '';
+  types.forEach(type => {
+    const items = state.meals[type];
+    const total = items.reduce((s, i) => s + i.cal, 0);
+    const section = document.createElement('div');
+    section.className = 'meal-section';
+    section.innerHTML = `
+      <div class="meal-header">
+        <div class="meal-title">${i18n[currentLang][type]} <span style="color: var(--text-dim); font-size: 13px;">${total} kcal</span></div>
+        <button class="meal-add" onclick="openMealAdd('${type}')">+</button>
+      </div>
+      <div class="meal-items">
+        ${items.length === 0 ? `<div class="meal-empty">${i18n[currentLang].noFoodLogged}</div>` :
+          items.map((it, i) => `<div class="meal-item"><span class="meal-item-name">${it.name}</span><span class="meal-item-cal">${it.cal} kcal</span></div>`).join('')}
+      </div>
+    `;
+    c.appendChild(section);
+  });
+}
+
+// Workouts
+function renderWorkoutCats() {
+  const cats = [
+    { id: 'chest', icon: '💪', key: 'catChest' },
+    { id: 'back', icon: '🏋️', key: 'catBack' },
+    { id: 'legs', icon: '🦵', key: 'catLegs' },
+    { id: 'arms', icon: '💪', key: 'catArms' },
+    { id: 'abs', icon: '🔥', key: 'catAbs' },
+    { id: 'cardio', icon: '🏃', key: 'catCardio' },
+  ];
+  const c = document.getElementById('workoutCats');
+  c.innerHTML = '';
+  cats.forEach(cat => {
+    const el = document.createElement('div');
+    el.className = 'workout-cat' + (cat.id === currentCat ? ' active' : '');
+    el.innerHTML = `<div class="workout-cat-icon">${cat.icon}</div><div class="workout-cat-name">${i18n[currentLang][cat.key]}</div>`;
+    el.onclick = () => { currentCat = cat.id; renderWorkoutCats(); renderExercises(); };
+    c.appendChild(el);
+  });
+}
+
+function renderExercises() {
+  const c = document.getElementById('exerciseList');
+  c.innerHTML = '';
+  exercises[currentCat].forEach(ex => {
+    const el = document.createElement('div');
+    el.className = 'exercise-card';
+    el.innerHTML = `
+      <div class="exercise-img">${ex.icon}</div>
+      <div class="exercise-info">
+        <div class="exercise-name">${ex.name}</div>
+        <div class="exercise-meta">${ex.sets} • ${ex.cal} kcal</div>
+      </div>
+      <div class="exercise-arrow">›</div>
+    `;
+    el.onclick = () => showExercise(ex);
+    c.appendChild(el);
+  });
+}
+
+function showExercise(ex) {
+  document.getElementById('exerciseDetail').innerHTML = `
+    <div style="text-align: center; font-size: 80px; margin: 20px 0;">${ex.icon}</div>
+    <div class="modal-title" style="text-align: center;">${ex.name}</div>
+    <div style="display: flex; justify-content: space-around; margin: 20px 0; padding: 16px; background: var(--bg-elevated); border-radius: 16px;">
+      <div style="text-align: center;">
+        <div style="font-family: 'DM Serif Display', serif; font-size: 24px;">${ex.sets}</div>
+        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">Sets</div>
+      </div>
+      <div style="text-align: center;">
+        <div style="font-family: 'DM Serif Display', serif; font-size: 24px;">${ex.cal}</div>
+        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">kcal</div>
+      </div>
+    </div>
+    <p style="color: var(--text-dim); line-height: 1.6; margin-bottom: 20px;">${ex.desc}</p>
+    <button class="btn-primary" onclick="completeWorkout(${ex.cal})">Complete Workout</button>
+  `;
+  openModal('exerciseModal');
+}
+
+function completeWorkout(cal) {
+  state.totalWorkouts++;
+  state.totalCalsBurned += cal;
+  save(); renderAll(); closeModal('exerciseModal');
+  showToast('Workout complete! +' + cal + ' kcal');
+}
+
+// ============ BUNDLES / PROGRAMS ============
+function renderBundles() {
+  const c = document.getElementById('bundlesList');
+  c.innerHTML = '';
+  bundles.forEach(b => {
+    const progress = state.bundleProgress[b.id] || 0;
+    const pct = (progress / b.duration) * 100;
+    const isActive = state.activeBundle === b.id;
+    const name = currentLang === 'hi' ? b.nameHi : b.name;
+    const el = document.createElement('div');
+    el.className = 'bundle-card';
+    el.style.setProperty('--bundle-color', b.color);
+    el.innerHTML = `
+      <div class="bundle-header">
+        <div class="bundle-icon" style="background: ${b.color}22; color: ${b.color}">${b.icon}</div>
+        <div class="bundle-info">
+          <div class="bundle-name">${name}</div>
+          <div class="bundle-meta">
+            <span>📅 ${b.duration} ${currentLang === 'hi' ? 'दिन' : 'days'}</span>
+            <span>📊 ${b.level}</span>
+          </div>
+        </div>
+      </div>
+      <div class="bundle-desc">${currentLang === 'hi' ? b.descHi : b.desc}</div>
+      <div class="bundle-tags">
+        <span class="bundle-tag ${isActive ? 'active' : ''}">${isActive ? '✓ ' + (currentLang === 'hi' ? 'सक्रिय' : 'Active') : b.goal}</span>
+      </div>
+      ${isActive ? `
+        <div class="bundle-progress">
+          <div class="bundle-progress-bar"><div class="bundle-progress-fill" style="width: ${pct}%; background: ${b.color}"></div></div>
+          <div class="bundle-progress-text">Day ${progress}/${b.duration}</div>
+        </div>
+      ` : ''}
+    `;
+    el.onclick = () => showBundle(b);
+    c.appendChild(el);
+  });
+}
+
+function showBundle(b) {
+  const isActive = state.activeBundle === b.id;
+  const progress = state.bundleProgress[b.id] || 0;
+  const pct = (progress / b.duration) * 100;
+  const name = currentLang === 'hi' ? b.nameHi : b.name;
+  const desc = currentLang === 'hi' ? b.descHi : b.desc;
+  const tips = currentLang === 'hi' ? b.tipsHi : b.tips;
+  const lang = currentLang === 'hi';
+
+  document.getElementById('bundleDetail').innerHTML = `
+    <div class="bundle-detail-hero" style="background: linear-gradient(135deg, ${b.color} 0%, ${b.color}cc 100%);">
+      <div class="bundle-detail-icon">${b.icon}</div>
+      <div class="bundle-detail-name">${name}</div>
+      <div class="bundle-detail-goal">🎯 ${b.goal} • ⏱️ ${b.duration} ${lang ? 'दिन' : 'days'}</div>
+    </div>
+    
+    <p style="color: var(--text-dim); line-height: 1.6; margin-bottom: 20px; font-size: 14px;">${desc}</p>
+
+    ${isActive ? `
+      <div style="background: var(--bg-elevated); padding: 16px; border-radius: 14px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+          <span style="font-weight: 600; font-size: 14px;">${lang ? 'प्रगति' : 'Progress'}</span>
+          <span style="color: ${b.color}; font-weight: 700; font-size: 14px;">Day ${progress}/${b.duration}</span>
+        </div>
+        <div class="bundle-progress-bar"><div class="bundle-progress-fill" style="width: ${pct}%; background: ${b.color}"></div></div>
+      </div>
+    ` : ''}
+
+    <div class="bundle-section">
+      <div class="bundle-section-title">💪 ${lang ? 'दैनिक वर्कआउट' : 'Daily Workout'}</div>
+      ${b.workout.map(w => `<div class="bundle-list-item">${w}</div>`).join('')}
+    </div>
+
+    <div class="bundle-section">
+      <div class="bundle-section-title">🍎 ${lang ? 'दैनिक डाइट प्लान' : 'Daily Diet Plan'}</div>
+      ${b.diet.map(d => `<div class="bundle-list-item">${d}</div>`).join('')}
+    </div>
+
+    <div class="bundle-section">
+      <div class="bundle-section-title">💡 ${lang ? 'महत्वपूर्ण टिप्स' : 'Important Tips'}</div>
+      <div style="background: ${b.color}15; border-left: 3px solid ${b.color}; padding: 14px 16px; border-radius: 8px; font-size: 14px; line-height: 1.6;">
+        ${tips}
+      </div>
+    </div>
+
+    ${isActive ? `
+      <button class="btn-primary" style="background: ${b.color}; color: #fff;" onclick="openDayTracker('${b.id}')">${lang ? '📅 आज का दिन देखें' : "📅 Open Today's Day"}</button>
+      <button class="btn-primary" style="background: var(--bg-elevated); color: var(--danger); margin-top: 8px;" onclick="quitBundle()">${lang ? 'प्रोग्राम छोड़ें' : 'Quit Program'}</button>
+    ` : `
+      <button class="btn-primary" style="background: ${b.color}; color: #fff;" onclick="startBundle('${b.id}')">${lang ? '🚀 प्रोग्राम शुरू करें' : '🚀 Start This Program'}</button>
+    `}
+  `;
+  openModal('bundleModal');
+}
+
+// ============ DAY TRACKER ============
+function openDayTracker(bundleId) {
+  const b = bundles.find(x => x.id === bundleId);
+  const currentDay = (state.bundleProgress[bundleId] || 0) + 1;
+  const lang = currentLang === 'hi';
+  
+  // Get or initialize today's task progress
+  if (!state.dayTasks) state.dayTasks = {};
+  const taskKey = `${bundleId}_day${currentDay}`;
+  if (!state.dayTasks[taskKey]) {
+    state.dayTasks[taskKey] = {
+      workouts: b.workout.map(() => false),
+      meals: b.diet.map(() => false),
+      water: false,
+      sleep: false
+    };
+  }
+  
+  const tasks = state.dayTasks[taskKey];
+  const totalTasks = tasks.workouts.length + tasks.meals.length + 2;
+  const doneTasks = tasks.workouts.filter(Boolean).length + tasks.meals.filter(Boolean).length + (tasks.water ? 1 : 0) + (tasks.sleep ? 1 : 0);
+  const allDone = doneTasks === totalTasks;
+  const taskPct = (doneTasks / totalTasks) * 100;
+  
+  const isLastDay = currentDay >= b.duration;
+  
+  document.getElementById('bundleDetail').innerHTML = `
+    <div class="bundle-detail-hero" style="background: linear-gradient(135deg, ${b.color} 0%, ${b.color}cc 100%);">
+      <div style="font-size: 14px; opacity: 0.9; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">${lang ? 'दिन' : 'Day'} ${currentDay} / ${b.duration}</div>
+      <div class="bundle-detail-name">${b.icon} ${lang ? b.nameHi : b.name}</div>
+      <div class="bundle-detail-goal">${doneTasks}/${totalTasks} ${lang ? 'कार्य पूरे' : 'tasks done'}</div>
+      <div style="margin-top: 16px; background: rgba(0,0,0,0.2); height: 8px; border-radius: 100px; overflow: hidden;">
+        <div style="background: #fff; height: 100%; width: ${taskPct}%; border-radius: 100px; transition: width 0.4s;"></div>
+      </div>
+    </div>
+
+    <div class="bundle-section">
+      <div class="bundle-section-title">💪 ${lang ? 'वर्कआउट चेकलिस्ट' : 'Workout Checklist'}</div>
+      ${b.workout.map((w, i) => `
+        <div class="task-item ${tasks.workouts[i] ? 'done' : ''}" onclick="toggleTask('${bundleId}', ${currentDay}, 'workouts', ${i})">
+          <div class="task-check">${tasks.workouts[i] ? '✓' : ''}</div>
+          <div class="task-text">${w}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="bundle-section">
+      <div class="bundle-section-title">🍎 ${lang ? 'भोजन ट्रैकिंग' : 'Meal Tracking'}</div>
+      ${b.diet.map((d, i) => `
+        <div class="task-item ${tasks.meals[i] ? 'done' : ''}" onclick="toggleTask('${bundleId}', ${currentDay}, 'meals', ${i})">
+          <div class="task-check">${tasks.meals[i] ? '✓' : ''}</div>
+          <div class="task-text">${d}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="bundle-section">
+      <div class="bundle-section-title">💧 ${lang ? 'अतिरिक्त लक्ष्य' : 'Extra Goals'}</div>
+      <div class="task-item ${tasks.water ? 'done' : ''}" onclick="toggleTask('${bundleId}', ${currentDay}, 'water', 0)">
+        <div class="task-check">${tasks.water ? '✓' : ''}</div>
+        <div class="task-text">💧 ${lang ? '3 लीटर पानी पिएं' : 'Drink 3L water'}</div>
+      </div>
+      <div class="task-item ${tasks.sleep ? 'done' : ''}" onclick="toggleTask('${bundleId}', ${currentDay}, 'sleep', 0)">
+        <div class="task-check">${tasks.sleep ? '✓' : ''}</div>
+        <div class="task-text">😴 ${lang ? '7-8 घंटे सोएं' : 'Sleep 7-8 hours'}</div>
+      </div>
+    </div>
+
+    ${allDone ? `
+      <div style="background: linear-gradient(135deg, ${b.color}, ${b.color}99); padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 16px;">
+        <div style="font-size: 48px; margin-bottom: 8px;">🎉</div>
+        <div style="font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff;">${lang ? 'शानदार!' : 'Amazing!'}</div>
+        <div style="color: rgba(255,255,255,0.9); font-size: 13px; margin-top: 4px;">${lang ? 'सभी कार्य पूरे!' : 'All tasks completed!'}</div>
+      </div>
+      <button class="btn-primary" style="background: ${b.color}; color: #fff;" onclick="completeDayAndAdvance('${bundleId}')">${isLastDay ? (lang ? '🏆 प्रोग्राम पूरा करें' : '🏆 Finish Program') : (lang ? '✓ दिन पूरा करें' : '✓ Complete Day')}</button>
+    ` : `
+      <div style="background: var(--bg-elevated); padding: 14px; border-radius: 12px; text-align: center; color: var(--text-dim); font-size: 13px; margin-bottom: 12px;">
+        ${lang ? 'सभी कार्य पूरे करें फिर अगला दिन अनलॉक होगा' : 'Complete all tasks to unlock next day'}
+      </div>
+    `}
+    <button class="btn-primary" style="background: var(--bg-elevated); color: var(--text); margin-top: 8px;" onclick="showBundle(bundles.find(x=>x.id==='${bundleId}'))">${lang ? '← वापस' : '← Back'}</button>
+  `;
+  openModal('bundleModal');
+}
+
+function toggleTask(bundleId, day, type, index) {
+  const taskKey = `${bundleId}_day${day}`;
+  if (!state.dayTasks[taskKey]) return;
+  if (type === 'water' || type === 'sleep') {
+    state.dayTasks[taskKey][type] = !state.dayTasks[taskKey][type];
+  } else {
+    state.dayTasks[taskKey][type][index] = !state.dayTasks[taskKey][type][index];
+  }
+  save();
+  // Re-render the day tracker (decrement currentDay since we'll add 1 again)
+  state.bundleProgress[bundleId] = day - 1;
+  openDayTracker(bundleId);
+}
+
+function completeDayAndAdvance(bundleId) {
+  const b = bundles.find(x => x.id === bundleId);
+  state.bundleProgress[bundleId] = (state.bundleProgress[bundleId] || 0) + 1;
+  state.totalWorkouts++;
+  state.totalCalsBurned += 200; // approx per day
+  
+  if (state.bundleProgress[bundleId] >= b.duration) {
+    closeModal('bundleModal');
+    showProgramComplete(b);
+    state.activeBundle = null;
+  } else {
+    showToast(`🔥 Day ${state.bundleProgress[bundleId]} complete!`);
+    closeModal('bundleModal');
+  }
+  save();
+  renderBundles();
+  renderAll();
+}
+
+function showProgramComplete(b) {
+  const lang = currentLang === 'hi';
+  document.getElementById('bundleDetail').innerHTML = `
+    <div style="text-align: center; padding: 40px 20px;">
+      <div style="font-size: 100px; margin-bottom: 20px;">🏆</div>
+      <div style="font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 8px;">${lang ? 'बधाई हो!' : 'Congratulations!'}</div>
+      <div style="color: var(--text-dim); margin-bottom: 24px; font-size: 15px;">${lang ? 'आपने पूरा किया' : "You've completed"} <br><strong style="color: ${b.color}; font-size: 18px;">${lang ? b.nameHi : b.name}</strong></div>
+      <div style="background: var(--bg-elevated); padding: 20px; border-radius: 16px; margin-bottom: 20px;">
+        <div style="font-size: 13px; color: var(--text-dim); margin-bottom: 4px;">${lang ? 'कुल दिन' : 'Total Days'}</div>
+        <div style="font-family: 'DM Serif Display', serif; font-size: 36px; color: ${b.color};">${b.duration}</div>
+      </div>
+      <button class="btn-primary" style="background: ${b.color}; color: #fff;" onclick="closeModal('bundleModal')">${lang ? 'शानदार!' : 'Awesome!'}</button>
+    </div>
+  `;
+  openModal('bundleModal');
+}
+
+function startBundle(id) {
+  state.activeBundle = id;
+  state.bundleProgress[id] = 0;
+  save();
+  closeModal('bundleModal');
+  renderBundles();
+  showToast(currentLang === 'hi' ? 'प्रोग्राम शुरू!' : 'Program started!');
+}
+
+function markBundleDay(id) {
+  state.bundleProgress[id] = (state.bundleProgress[id] || 0) + 1;
+  const b = bundles.find(x => x.id === id);
+  if (state.bundleProgress[id] >= b.duration) {
+    showToast('🎉 Program Complete!');
+    state.activeBundle = null;
+  } else {
+    showToast('Day ' + state.bundleProgress[id] + ' done! 🔥');
+  }
+  save();
+  closeModal('bundleModal');
+  renderBundles();
+}
+
+function quitBundle() {
+  if (confirm(currentLang === 'hi' ? 'क्या आप वाकई प्रोग्राम छोड़ना चाहते हैं?' : 'Are you sure you want to quit?')) {
+    state.activeBundle = null;
+    save();
+    closeModal('bundleModal');
+    renderBundles();
+  }
+}
+
+// ============ DAILY CHALLENGE ============
+function renderDailyChallenge() {
+  const today = new Date().toISOString().split('T')[0];
+  // Pick challenge based on day of year (consistent for the day)
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const ch = challenges[dayOfYear % challenges.length];
+  document.getElementById('challengeIcon').textContent = ch.icon;
+  document.getElementById('challengeText').textContent = currentLang === 'hi' ? ch.hi : ch.en;
+  
+  const btn = document.querySelector('#dailyChallengeCard .btn-primary');
+  if (state.lastChallengeDate === today) {
+    btn.textContent = currentLang === 'hi' ? '✓ पूरा हो गया' : '✓ Completed Today';
+    btn.style.opacity = '0.6';
+  } else {
+    btn.textContent = currentLang === 'hi' ? 'चुनौती स्वीकार करें ✓' : 'Accept Challenge ✓';
+    btn.style.opacity = '1';
+  }
+}
+
+function completeChallenge() {
+  const today = new Date().toISOString().split('T')[0];
+  if (state.lastChallengeDate === today) {
+    showToast(currentLang === 'hi' ? 'आज पहले ही पूरा' : 'Already done today!');
+    return;
+  }
+  state.lastChallengeDate = today;
+  state.challengesCompleted.push(today);
+  save();
+  renderDailyChallenge();
+  showToast('🎉 +10 XP earned!');
+}
+
+function renderDailyTip() {
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const tip = dailyTips[dayOfYear % dailyTips.length];
+  document.getElementById('dailyTipText').textContent = currentLang === 'hi' ? tip.hi : tip.en;
+}
+
+function switchPageDirect(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  if (name === 'progress') { renderWeightChart(); renderAchievements(); }
+}
+
+// Weight Chart
+function renderWeightChart() {
+  const svg = document.getElementById('weightChart');
+  if (!state.weightHistory.length) return;
+  const data = state.weightHistory.slice(-7);
+  const w = 320, h = 140, pad = 20;
+  const min = Math.min(...data.map(d => d.weight)) - 1;
+  const max = Math.max(...data.map(d => d.weight)) + 1;
+  const range = max - min || 1;
+  const points = data.map((d, i) => {
+    const x = pad + (i * (w - 2*pad) / Math.max(1, data.length - 1));
+    const y = h - pad - ((d.weight - min) / range * (h - 2*pad));
+    return `${x},${y}`;
+  }).join(' ');
+  
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#c4ff3d" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#c4ff3d" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polyline points="${points}" fill="none" stroke="#c4ff3d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="${points} ${pad + (data.length-1) * (w - 2*pad)/Math.max(1, data.length-1)},${h-pad} ${pad},${h-pad}" fill="url(#grad)"/>
+    ${data.map((d, i) => {
+      const x = pad + (i * (w - 2*pad) / Math.max(1, data.length - 1));
+      const y = h - pad - ((d.weight - min) / range * (h - 2*pad));
+      return `<circle cx="${x}" cy="${y}" r="4" fill="#c4ff3d"/>`;
+    }).join('')}
+  `;
+}
+
+// Achievements
+function renderAchievements() {
+  const c = document.getElementById('achievementsList');
+  c.innerHTML = '';
+  achievementsList.forEach(a => {
+    const unlocked = a.check(state);
+    const el = document.createElement('div');
+    el.className = 'achievement' + (unlocked ? '' : ' locked');
+    el.innerHTML = `<div class="achievement-icon">${a.icon}</div><div class="achievement-name">${a.name}</div>`;
+    c.appendChild(el);
+  });
+}
+
+// Timer
+let timerInterval, timerSeconds = 30, timerRunning = false, timerTotal = 30;
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timerToggle').textContent = i18n[currentLang].start;
+  } else {
+    timerRunning = true;
+    document.getElementById('timerToggle').textContent = i18n[currentLang].pause;
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      updateTimer();
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById('timerToggle').textContent = i18n[currentLang].start;
+        showToast('Time up!');
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      }
+    }, 1000);
+  }
+}
+
+function resetTimer() {
+  clearInterval(timerInterval);
+  timerSeconds = 30;
+  timerRunning = false;
+  document.getElementById('timerToggle').textContent = i18n[currentLang].start;
+  updateTimer();
+}
+
+function updTimer() {}
+function updateTimer() {
+  const m = Math.floor(timerSeconds / 60);
+  const s = timerSeconds % 60;
+  document.getElementById('timerTime').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct = timerSeconds / timerTotal;
+  document.getElementById('timerProgress').style.strokeDashoffset = 691 * (1 - pct);
+}
+
+// Modal
+function openModal(id) { document.getElementById(id).classList.add('visible'); }
+function closeModal(id) { document.getElementById(id).classList.remove('visible'); }
+
+// Theme
+function toggleTheme() {
+  const t = document.documentElement.dataset.theme === 'light' ? '' : 'light';
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem('zenfit_theme', t);
+}
+function applyTheme() {
+  const t = localStorage.getItem('zenfit_theme') || '';
+  document.documentElement.dataset.theme = t;
+}
+
+// Toast
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 2000);
+}
+
+// Export
+function exportData() {
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'zenfit-data.json';
+  a.click();
+  showToast('Data exported');
+}
+
+function resetApp() {
+  if (confirm('Reset all data? This cannot be undone.')) {
+    localStorage.removeItem('zenfit_state');
+    location.reload();
+  }
+}
+
+// Init
+applyLang();
+applyTheme();
+if (state.user) {
+  document.getElementById('onboarding').classList.add('hidden');
+  document.getElementById('app').classList.add('visible');
+  initApp();
+}
+</script>
+</body>
+</html>
