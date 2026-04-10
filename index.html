@@ -217,6 +217,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+}
+
+.header > div:first-child {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .greeting {
@@ -228,13 +235,20 @@ body {
 .username {
   font-family: 'DM Serif Display', serif;
   font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.header-actions { display: flex; gap: 12px; }
+.header-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
 
 .icon-btn {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
@@ -242,8 +256,9 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
   color: var(--text);
+  flex-shrink: 0;
 }
 
 .page { display: none; padding: 0 20px; }
@@ -872,6 +887,137 @@ body {
   flex-shrink: 0;
 }
 
+/* === ANIMATED WORKOUT DEMO === */
+.workout-demo {
+  background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-card) 100%);
+  border-radius: 20px;
+  padding: 30px 20px;
+  text-align: center;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.workout-demo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, var(--accent) 0%, transparent 70%);
+  opacity: 0.05;
+}
+
+.demo-figure {
+  font-size: 100px;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 10px 30px rgba(196, 255, 61, 0.3));
+}
+
+/* Push up animation */
+.demo-pushup { animation: pushup 2s ease-in-out infinite; }
+@keyframes pushup {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(15px) scale(0.95); }
+}
+
+/* Squat animation */
+.demo-squat { animation: squat 1.8s ease-in-out infinite; }
+@keyframes squat {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(20px) scaleY(0.85); }
+}
+
+/* Run animation */
+.demo-run { animation: run 0.6s ease-in-out infinite; }
+@keyframes run {
+  0%, 100% { transform: translateX(-10px) rotate(-5deg); }
+  50% { transform: translateX(10px) rotate(5deg); }
+}
+
+/* Jump animation */
+.demo-jump { animation: jump 1s ease-in-out infinite; }
+@keyframes jump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-30px); }
+}
+
+/* Plank animation */
+.demo-plank { animation: plank 2s ease-in-out infinite; }
+@keyframes plank {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* Curl animation */
+.demo-curl { animation: curl 1.5s ease-in-out infinite; }
+@keyframes curl {
+  0%, 100% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+}
+
+/* Crunch animation */
+.demo-crunch { animation: crunch 1.5s ease-in-out infinite; }
+@keyframes crunch {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.8) translateY(10px); }
+}
+
+.demo-counter {
+  margin-top: 20px;
+  font-family: 'DM Serif Display', serif;
+  font-size: 48px;
+  color: var(--accent);
+  position: relative;
+  z-index: 1;
+}
+
+.demo-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.demo-controls {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.demo-btn {
+  flex: 1;
+  padding: 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text);
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.demo-btn.primary {
+  background: var(--accent);
+  color: #0a0e1a;
+  border-color: var(--accent);
+}
+
+.demo-pulse {
+  animation: pulseRing 2s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(196, 255, 61, 0.4); }
+  100% { box-shadow: 0 0 0 30px rgba(196, 255, 61, 0); }
+}
+
 /* Task items - day tracker */
 .task-item {
   background: var(--bg-elevated);
@@ -1474,6 +1620,9 @@ body {
     </div>
 
     <div class="section-title" data-i18n="choosePlan">Choose Your Plan</div>
+    <button class="btn-primary" style="background: var(--bg-card); border: 2px dashed var(--accent); color: var(--accent); margin-bottom: 14px;" onclick="openCustomPlan()">
+      ✨ <span data-i18n="createCustom">Create Your Own Plan</span>
+    </button>
     <div id="bundlesList"></div>
   </div>
 
@@ -1655,6 +1804,37 @@ body {
   </div>
 </div>
 
+<div class="modal" id="customPlanModal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal('customPlanModal')">×</button>
+    <div class="modal-title">✨ Create Your Plan</div>
+    <p style="color: var(--text-dim); font-size: 13px; margin-bottom: 16px;">Build a personalized fitness program just for you</p>
+    
+    <input type="text" class="input" id="cpName" placeholder="Plan name (e.g., My Summer Cut)">
+    <input type="number" class="input" id="cpDays" placeholder="Duration in days (e.g., 30)">
+    
+    <div style="margin-top: 8px; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); font-weight: 700;">🎯 Goal</div>
+    <select class="input" id="cpGoal">
+      <option value="Lose weight">Lose Weight</option>
+      <option value="Build muscle">Build Muscle</option>
+      <option value="Stay fit">Stay Fit</option>
+      <option value="Get stronger">Get Stronger</option>
+      <option value="Improve endurance">Improve Endurance</option>
+    </select>
+    
+    <div style="margin-top: 8px; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); font-weight: 700;">💪 Daily Workout (one per line)</div>
+    <textarea class="input" id="cpWorkout" rows="5" placeholder="Push Ups 3x15&#10;Squats 4x12&#10;Plank 3x60s&#10;Running 20 mins" style="font-family: inherit; resize: vertical;"></textarea>
+    
+    <div style="margin-top: 8px; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); font-weight: 700;">🍎 Daily Diet (one per line)</div>
+    <textarea class="input" id="cpDiet" rows="5" placeholder="Breakfast: Oats + Banana&#10;Lunch: Roti + Dal + Salad&#10;Snack: Fruits + Nuts&#10;Dinner: Grilled Chicken + Veggies" style="font-family: inherit; resize: vertical;"></textarea>
+    
+    <div style="margin-top: 8px; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); font-weight: 700;">💡 Personal Tips</div>
+    <textarea class="input" id="cpTips" rows="2" placeholder="Stay consistent. Drink water." style="font-family: inherit; resize: vertical;"></textarea>
+    
+    <button class="btn-primary" onclick="saveCustomPlan()">✓ Create Plan</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1776,7 +1956,7 @@ let state = JSON.parse(localStorage.getItem('zenfit_state')) || {
   totalWorkouts: 0, totalCalsBurned: 0, totalDays: 0,
   achievements: [], activeBundle: null, bundleProgress: {},
   challengesCompleted: [], lastChallengeDate: null,
-  dayTasks: {}
+  dayTasks: {}, customPlans: []
 };
 
 function save() { localStorage.setItem('zenfit_state', JSON.stringify(state)); }
@@ -1842,36 +2022,142 @@ function finishOnboarding() {
 
 // ============ FOOD DATABASE ============
 const foods = [
-  // Indian foods
-  { name: 'Roti (1)', cal: 120, p: 3, c: 18, f: 3 },
-  { name: 'Rice (1 cup)', cal: 200, p: 4, c: 45, f: 0 },
-  { name: 'Dal (1 bowl)', cal: 150, p: 9, c: 20, f: 5 },
-  { name: 'Paneer (100g)', cal: 265, p: 18, c: 6, f: 20 },
-  { name: 'Chicken Curry (1 bowl)', cal: 280, p: 25, c: 8, f: 18 },
-  { name: 'Idli (2)', cal: 78, p: 2, c: 17, f: 0 },
-  { name: 'Dosa (1)', cal: 168, p: 4, c: 25, f: 6 },
-  { name: 'Samosa (1)', cal: 252, p: 4, c: 24, f: 17 },
+  // === HIGH PROTEIN / प्रोटीन ===
+  { name: 'Soya Chunks (50g cooked)', cal: 173, p: 25, c: 17, f: 0 },
+  { name: 'Soya Curry (1 bowl)', cal: 240, p: 22, c: 18, f: 10 },
+  { name: 'Soya Chaap (100g)', cal: 280, p: 20, c: 12, f: 16 },
+  { name: 'Tofu (100g)', cal: 144, p: 17, c: 3, f: 9 },
+  { name: 'Whey Protein (1 scoop)', cal: 120, p: 24, c: 3, f: 1 },
+  { name: 'Egg Whites (3)', cal: 51, p: 11, c: 1, f: 0 },
+  { name: 'Greek Yogurt (1 cup)', cal: 100, p: 17, c: 6, f: 0 },
+  { name: 'Cottage Cheese (100g)', cal: 98, p: 11, c: 3, f: 4 },
+  { name: 'Chicken Tikka (100g)', cal: 195, p: 28, c: 4, f: 8 },
+  { name: 'Mutton Curry (1 bowl)', cal: 320, p: 25, c: 8, f: 22 },
+  { name: 'Prawns (100g)', cal: 99, p: 24, c: 0, f: 0 },
+  { name: 'Salmon (100g)', cal: 208, p: 20, c: 0, f: 13 },
+  { name: 'Tuna (100g)', cal: 132, p: 28, c: 0, f: 1 },
+  { name: 'Moong Dal (1 bowl)', cal: 145, p: 10, c: 22, f: 1 },
+  { name: 'Chana Dal (1 bowl)', cal: 180, p: 11, c: 25, f: 4 },
+  { name: 'Black Beans (1 bowl)', cal: 220, p: 15, c: 40, f: 1 },
+  { name: 'Quinoa (1 cup)', cal: 220, p: 8, c: 39, f: 4 },
+
+  // === BREAKFAST / नाश्ता ===
   { name: 'Poha (1 plate)', cal: 250, p: 5, c: 45, f: 6 },
   { name: 'Upma (1 bowl)', cal: 250, p: 6, c: 40, f: 8 },
-  { name: 'Chapati (1)', cal: 104, p: 3, c: 18, f: 3 },
-  { name: 'Biryani (1 plate)', cal: 290, p: 9, c: 40, f: 10 },
-  { name: 'Curd (1 bowl)', cal: 98, p: 11, c: 4, f: 5 },
-  { name: 'Lassi (1 glass)', cal: 260, p: 8, c: 30, f: 12 },
-  // International
-  { name: 'Egg (1 boiled)', cal: 78, p: 6, c: 1, f: 5 },
-  { name: 'Chicken Breast (100g)', cal: 165, p: 31, c: 0, f: 4 },
+  { name: 'Idli (2 pcs)', cal: 78, p: 2, c: 17, f: 0 },
+  { name: 'Dosa (plain)', cal: 168, p: 4, c: 25, f: 6 },
+  { name: 'Masala Dosa', cal: 250, p: 6, c: 35, f: 10 },
+  { name: 'Vada (1 pc)', cal: 130, p: 4, c: 15, f: 6 },
+  { name: 'Uttapam (1 pc)', cal: 200, p: 5, c: 30, f: 6 },
+  { name: 'Aloo Paratha (1)', cal: 290, p: 6, c: 36, f: 13 },
+  { name: 'Plain Paratha (1)', cal: 200, p: 4, c: 28, f: 8 },
+  { name: 'Bread Omelette', cal: 280, p: 14, c: 24, f: 14 },
+  { name: 'Boiled Egg (1)', cal: 78, p: 6, c: 1, f: 5 },
+  { name: 'Egg Bhurji (2 eggs)', cal: 220, p: 13, c: 4, f: 16 },
+  { name: 'Oats Bowl', cal: 150, p: 5, c: 27, f: 3 },
+  { name: 'Cornflakes + Milk', cal: 200, p: 7, c: 34, f: 4 },
+  { name: 'Sprouts (1 bowl)', cal: 130, p: 8, c: 22, f: 1 },
+  { name: 'Bread Toast (2 slices)', cal: 160, p: 6, c: 30, f: 2 },
+  { name: 'Peanut Butter Toast', cal: 255, p: 10, c: 33, f: 10 },
+
+  // === MAIN MEALS / मुख्य भोजन ===
+  { name: 'Roti / Chapati (1)', cal: 104, p: 3, c: 18, f: 3 },
+  { name: 'Tandoori Roti (1)', cal: 120, p: 4, c: 20, f: 3 },
+  { name: 'Naan (1)', cal: 260, p: 9, c: 45, f: 5 },
+  { name: 'Butter Naan (1)', cal: 320, p: 9, c: 46, f: 12 },
+  { name: 'White Rice (1 cup)', cal: 200, p: 4, c: 45, f: 0 },
+  { name: 'Brown Rice (1 cup)', cal: 215, p: 5, c: 45, f: 2 },
+  { name: 'Jeera Rice (1 cup)', cal: 230, p: 4, c: 44, f: 5 },
+  { name: 'Pulao (1 plate)', cal: 280, p: 6, c: 42, f: 10 },
+  { name: 'Veg Biryani (1 plate)', cal: 290, p: 8, c: 45, f: 10 },
+  { name: 'Chicken Biryani (1 plate)', cal: 350, p: 18, c: 42, f: 12 },
+  { name: 'Khichdi (1 bowl)', cal: 200, p: 8, c: 35, f: 4 },
+  { name: 'Dal (1 bowl)', cal: 150, p: 9, c: 20, f: 5 },
+  { name: 'Dal Makhani (1 bowl)', cal: 280, p: 12, c: 28, f: 14 },
+  { name: 'Rajma (1 bowl)', cal: 215, p: 12, c: 32, f: 4 },
+  { name: 'Chole (1 bowl)', cal: 270, p: 12, c: 35, f: 9 },
+  { name: 'Mixed Veg Sabzi', cal: 130, p: 4, c: 15, f: 6 },
+  { name: 'Aloo Gobi', cal: 150, p: 4, c: 18, f: 7 },
+  { name: 'Bhindi Sabzi', cal: 110, p: 3, c: 12, f: 6 },
+  { name: 'Palak Paneer', cal: 240, p: 13, c: 12, f: 17 },
+  { name: 'Paneer Butter Masala', cal: 380, p: 15, c: 14, f: 30 },
+  { name: 'Paneer (100g raw)', cal: 265, p: 18, c: 6, f: 20 },
+  { name: 'Chicken Curry (1 bowl)', cal: 280, p: 25, c: 8, f: 18 },
+  { name: 'Butter Chicken', cal: 440, p: 28, c: 12, f: 32 },
+  { name: 'Tandoori Chicken (100g)', cal: 175, p: 26, c: 2, f: 7 },
+  { name: 'Grilled Chicken Breast', cal: 165, p: 31, c: 0, f: 4 },
+  { name: 'Fish Curry (1 bowl)', cal: 220, p: 22, c: 8, f: 11 },
+  { name: 'Grilled Fish (100g)', cal: 145, p: 25, c: 0, f: 5 },
+
+  // === SNACKS / नाश्ता ===
+  { name: 'Samosa (1)', cal: 252, p: 4, c: 24, f: 17 },
+  { name: 'Kachori (1)', cal: 270, p: 5, c: 30, f: 15 },
+  { name: 'Pakora (5 pcs)', cal: 220, p: 6, c: 22, f: 12 },
+  { name: 'Bhel Puri (1 plate)', cal: 200, p: 5, c: 35, f: 5 },
+  { name: 'Pani Puri (6 pcs)', cal: 250, p: 4, c: 40, f: 8 },
+  { name: 'Vada Pav (1)', cal: 290, p: 7, c: 38, f: 12 },
+  { name: 'Pav Bhaji (1 plate)', cal: 400, p: 9, c: 50, f: 18 },
+  { name: 'Maggi (1 pack)', cal: 310, p: 7, c: 42, f: 12 },
+  { name: 'Sandwich (veg)', cal: 250, p: 8, c: 35, f: 9 },
+  { name: 'Grilled Sandwich', cal: 320, p: 10, c: 38, f: 14 },
+  { name: 'French Fries', cal: 365, p: 4, c: 48, f: 17 },
+  { name: 'Popcorn (1 bowl)', cal: 110, p: 3, c: 22, f: 1 },
+  { name: 'Chips (1 small pack)', cal: 150, p: 2, c: 15, f: 10 },
+  { name: 'Biscuits (4 pcs)', cal: 130, p: 2, c: 18, f: 5 },
+  { name: 'Rusk (2 pcs)', cal: 100, p: 2, c: 18, f: 2 },
+
+  // === FRUITS / फल ===
   { name: 'Banana (1)', cal: 105, p: 1, c: 27, f: 0 },
   { name: 'Apple (1)', cal: 95, p: 0, c: 25, f: 0 },
-  { name: 'Oats (1 bowl)', cal: 150, p: 5, c: 27, f: 3 },
+  { name: 'Orange (1)', cal: 62, p: 1, c: 15, f: 0 },
+  { name: 'Mango (1)', cal: 200, p: 3, c: 50, f: 1 },
+  { name: 'Papaya (1 cup)', cal: 60, p: 1, c: 15, f: 0 },
+  { name: 'Watermelon (1 cup)', cal: 46, p: 1, c: 12, f: 0 },
+  { name: 'Grapes (1 cup)', cal: 104, p: 1, c: 27, f: 0 },
+  { name: 'Pomegranate (1)', cal: 235, p: 5, c: 53, f: 3 },
+  { name: 'Guava (1)', cal: 68, p: 3, c: 14, f: 1 },
+
+  // === DRINKS / पेय ===
   { name: 'Milk (1 glass)', cal: 150, p: 8, c: 12, f: 8 },
-  { name: 'Bread (2 slices)', cal: 160, p: 6, c: 30, f: 2 },
-  { name: 'Peanut Butter (1 tbsp)', cal: 95, p: 4, c: 3, f: 8 },
-  { name: 'Almonds (10)', cal: 70, p: 3, c: 2, f: 6 },
-  { name: 'Pizza (1 slice)', cal: 285, p: 12, c: 36, f: 10 },
-  { name: 'Burger', cal: 354, p: 17, c: 30, f: 17 },
-  { name: 'Pasta (1 plate)', cal: 220, p: 8, c: 43, f: 1 },
-  { name: 'Salad (1 bowl)', cal: 100, p: 3, c: 10, f: 5 },
+  { name: 'Curd (1 bowl)', cal: 98, p: 11, c: 4, f: 5 },
+  { name: 'Lassi (sweet)', cal: 260, p: 8, c: 30, f: 12 },
+  { name: 'Buttermilk (1 glass)', cal: 40, p: 3, c: 5, f: 1 },
+  { name: 'Tea with milk', cal: 70, p: 2, c: 8, f: 3 },
+  { name: 'Coffee with milk', cal: 80, p: 3, c: 9, f: 4 },
+  { name: 'Black Coffee', cal: 5, p: 0, c: 1, f: 0 },
+  { name: 'Green Tea', cal: 2, p: 0, c: 0, f: 0 },
+  { name: 'Coca Cola (300ml)', cal: 130, p: 0, c: 35, f: 0 },
+  { name: 'Fresh Juice (1 glass)', cal: 110, p: 1, c: 26, f: 0 },
+  { name: 'Coconut Water', cal: 45, p: 2, c: 9, f: 0 },
   { name: 'Protein Shake', cal: 150, p: 25, c: 5, f: 2 },
+  { name: 'Banana Shake', cal: 270, p: 8, c: 45, f: 7 },
+
+  // === SWEETS / मिठाई ===
+  { name: 'Gulab Jamun (1)', cal: 150, p: 2, c: 22, f: 6 },
+  { name: 'Rasgulla (1)', cal: 125, p: 4, c: 20, f: 4 },
+  { name: 'Jalebi (50g)', cal: 150, p: 1, c: 24, f: 6 },
+  { name: 'Kheer (1 bowl)', cal: 250, p: 7, c: 35, f: 9 },
+  { name: 'Ice Cream (1 scoop)', cal: 137, p: 2, c: 16, f: 7 },
+  { name: 'Chocolate (small bar)', cal: 235, p: 3, c: 26, f: 13 },
+
+  // === NUTS & HEALTHY / नट्स ===
+  { name: 'Almonds (10 pcs)', cal: 70, p: 3, c: 2, f: 6 },
+  { name: 'Cashews (10 pcs)', cal: 90, p: 3, c: 5, f: 7 },
+  { name: 'Walnuts (4 halves)', cal: 100, p: 2, c: 2, f: 10 },
+  { name: 'Peanuts (handful)', cal: 160, p: 7, c: 5, f: 14 },
+  { name: 'Dates (3 pcs)', cal: 60, p: 0, c: 16, f: 0 },
+  { name: 'Peanut Butter (1 tbsp)', cal: 95, p: 4, c: 3, f: 8 },
+
+  // === INTERNATIONAL ===
+  { name: 'Pizza (1 slice)', cal: 285, p: 12, c: 36, f: 10 },
+  { name: 'Veg Burger', cal: 295, p: 12, c: 35, f: 12 },
+  { name: 'Chicken Burger', cal: 354, p: 17, c: 30, f: 17 },
+  { name: 'Pasta (1 plate)', cal: 220, p: 8, c: 43, f: 1 },
+  { name: 'Noodles (1 plate)', cal: 280, p: 8, c: 40, f: 10 },
+  { name: 'Fried Rice', cal: 320, p: 8, c: 45, f: 12 },
+  { name: 'Manchurian (6 pcs)', cal: 240, p: 6, c: 28, f: 12 },
+  { name: 'Salad (1 bowl)', cal: 100, p: 3, c: 10, f: 5 },
+  { name: 'Soup (1 bowl)', cal: 120, p: 5, c: 15, f: 4 },
 ];
 
 let currentMealType = 'breakfast';
@@ -2084,7 +2370,9 @@ function initApp() {
   applyLang();
   applyTheme();
   setGreeting();
-  document.getElementById('displayName').textContent = state.user.name;
+  // Use only first word of name to prevent overflow
+  const firstName = state.user.name.split(/[\s@]/)[0].slice(0, 15);
+  document.getElementById('displayName').textContent = firstName;
   document.getElementById('profileName').textContent = state.user.name;
   document.getElementById('profileAvatar').textContent = state.user.name[0].toUpperCase();
   document.getElementById('profileGoal').textContent = i18n[currentLang]['goal' + state.user.goal.charAt(0).toUpperCase() + state.user.goal.slice(1)];
@@ -2333,23 +2621,107 @@ function renderExercises() {
 }
 
 function showExercise(ex) {
+  // Map exercise to animation type
+  const animMap = {
+    'Push Ups': { emoji: '🤸', anim: 'demo-pushup' },
+    'Bench Press': { emoji: '🏋️', anim: 'demo-pushup' },
+    'Dumbbell Fly': { emoji: '🤾', anim: 'demo-curl' },
+    'Incline Press': { emoji: '🏋️', anim: 'demo-pushup' },
+    'Pull Ups': { emoji: '🧗', anim: 'demo-jump' },
+    'Deadlift': { emoji: '🏋️‍♂️', anim: 'demo-squat' },
+    'Barbell Row': { emoji: '🚣', anim: 'demo-curl' },
+    'Lat Pulldown': { emoji: '⬇️', anim: 'demo-pushup' },
+    'Squats': { emoji: '🧎', anim: 'demo-squat' },
+    'Lunges': { emoji: '🚶', anim: 'demo-run' },
+    'Leg Press': { emoji: '🦵', anim: 'demo-squat' },
+    'Calf Raises': { emoji: '👟', anim: 'demo-jump' },
+    'Bicep Curls': { emoji: '💪', anim: 'demo-curl' },
+    'Tricep Dips': { emoji: '🤲', anim: 'demo-pushup' },
+    'Hammer Curls': { emoji: '🔨', anim: 'demo-curl' },
+    'Tricep Extension': { emoji: '🙆', anim: 'demo-curl' },
+    'Crunches': { emoji: '🧘', anim: 'demo-crunch' },
+    'Plank': { emoji: '🤸‍♂️', anim: 'demo-plank' },
+    'Leg Raises': { emoji: '🦵', anim: 'demo-jump' },
+    'Russian Twists': { emoji: '🌀', anim: 'demo-curl' },
+    'Running': { emoji: '🏃', anim: 'demo-run' },
+    'Jumping Jacks': { emoji: '🤸', anim: 'demo-jump' },
+    'Burpees': { emoji: '💥', anim: 'demo-squat' },
+    'Mountain Climbers': { emoji: '⛰️', anim: 'demo-run' },
+  };
+  
+  const anim = animMap[ex.name] || { emoji: ex.icon, anim: 'demo-pushup' };
+  
   document.getElementById('exerciseDetail').innerHTML = `
-    <div style="text-align: center; font-size: 80px; margin: 20px 0;">${ex.icon}</div>
-    <div class="modal-title" style="text-align: center;">${ex.name}</div>
-    <div style="display: flex; justify-content: space-around; margin: 20px 0; padding: 16px; background: var(--bg-elevated); border-radius: 16px;">
-      <div style="text-align: center;">
-        <div style="font-family: 'DM Serif Display', serif; font-size: 24px;">${ex.sets}</div>
-        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">Sets</div>
+    <div class="workout-demo">
+      <div class="demo-figure ${anim.anim}">${anim.emoji}</div>
+      <div class="demo-counter" id="repCounter">0</div>
+      <div class="demo-label">REPS / TIME</div>
+    </div>
+    
+    <div class="modal-title" style="text-align: center; margin-bottom: 8px;">${ex.name}</div>
+    <div style="text-align: center; color: var(--text-dim); font-size: 13px; margin-bottom: 20px;">${ex.sets} • ${ex.cal} kcal</div>
+    
+    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+      <div style="flex: 1; background: var(--bg-elevated); padding: 14px; border-radius: 12px; text-align: center;">
+        <div style="font-family: 'DM Serif Display', serif; font-size: 22px;">${ex.sets}</div>
+        <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">Sets</div>
       </div>
-      <div style="text-align: center;">
-        <div style="font-family: 'DM Serif Display', serif; font-size: 24px;">${ex.cal}</div>
-        <div style="font-size: 11px; color: var(--text-dim); text-transform: uppercase;">kcal</div>
+      <div style="flex: 1; background: var(--bg-elevated); padding: 14px; border-radius: 12px; text-align: center;">
+        <div style="font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--danger);">${ex.cal}</div>
+        <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">kcal</div>
+      </div>
+      <div style="flex: 1; background: var(--bg-elevated); padding: 14px; border-radius: 12px; text-align: center;">
+        <div style="font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--accent);" id="exTimer">0:00</div>
+        <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px;">Time</div>
       </div>
     </div>
-    <p style="color: var(--text-dim); line-height: 1.6; margin-bottom: 20px;">${ex.desc}</p>
-    <button class="btn-primary" onclick="completeWorkout(${ex.cal})">Complete Workout</button>
+    
+    <div style="background: var(--bg-elevated); padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+      <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim); margin-bottom: 6px; font-weight: 700;">📋 How to do</div>
+      <p style="line-height: 1.6; font-size: 14px;">${ex.desc}</p>
+    </div>
+    
+    <div class="demo-controls">
+      <button class="demo-btn" onclick="addRep()">+1 REP</button>
+      <button class="demo-btn primary" onclick="startExerciseTimer()" id="exStartBtn">▶ START</button>
+    </div>
+    
+    <button class="btn-primary" style="margin-top: 12px;" onclick="completeWorkout(${ex.cal})">✓ Complete Workout</button>
   `;
+  
+  exerciseRepCount = 0;
+  exerciseSeconds = 0;
+  if (exerciseTimerInt) clearInterval(exerciseTimerInt);
   openModal('exerciseModal');
+}
+
+let exerciseRepCount = 0;
+let exerciseSeconds = 0;
+let exerciseTimerInt = null;
+
+function addRep() {
+  exerciseRepCount++;
+  document.getElementById('repCounter').textContent = exerciseRepCount;
+  if (navigator.vibrate) navigator.vibrate(30);
+}
+
+function startExerciseTimer() {
+  const btn = document.getElementById('exStartBtn');
+  if (exerciseTimerInt) {
+    clearInterval(exerciseTimerInt);
+    exerciseTimerInt = null;
+    btn.textContent = '▶ START';
+  } else {
+    btn.textContent = '⏸ PAUSE';
+    exerciseTimerInt = setInterval(() => {
+      exerciseSeconds++;
+      const m = Math.floor(exerciseSeconds / 60);
+      const s = exerciseSeconds % 60;
+      const el = document.getElementById('exTimer');
+      if (el) el.textContent = `${m}:${String(s).padStart(2,'0')}`;
+      else { clearInterval(exerciseTimerInt); exerciseTimerInt = null; }
+    }, 1000);
+  }
 }
 
 function completeWorkout(cal) {
@@ -2360,10 +2732,82 @@ function completeWorkout(cal) {
 }
 
 // ============ BUNDLES / PROGRAMS ============
+function getAllBundles() {
+  // Combine built-in bundles with user's custom plans
+  return [...bundles, ...(state.customPlans || [])];
+}
+
+function openCustomPlan() {
+  document.getElementById('cpName').value = '';
+  document.getElementById('cpDays').value = '';
+  document.getElementById('cpWorkout').value = '';
+  document.getElementById('cpDiet').value = '';
+  document.getElementById('cpTips').value = '';
+  openModal('customPlanModal');
+}
+
+function saveCustomPlan() {
+  const name = document.getElementById('cpName').value.trim();
+  const days = parseInt(document.getElementById('cpDays').value);
+  const goal = document.getElementById('cpGoal').value;
+  const workoutText = document.getElementById('cpWorkout').value.trim();
+  const dietText = document.getElementById('cpDiet').value.trim();
+  const tips = document.getElementById('cpTips').value.trim();
+  
+  if (!name || !days || !workoutText || !dietText) {
+    showToast('Please fill all required fields');
+    return;
+  }
+  if (days < 1 || days > 365) {
+    showToast('Days must be 1-365');
+    return;
+  }
+  
+  const colors = ['#c4ff3d', '#4facfe', '#a78bfa', '#ec4899', '#ffa502', '#2ed573'];
+  const icons = ['⭐', '🎯', '🚀', '💎', '🌟', '🔥', '⚡', '💫'];
+  
+  const newPlan = {
+    id: 'custom_' + Date.now(),
+    icon: icons[Math.floor(Math.random() * icons.length)],
+    color: colors[Math.floor(Math.random() * colors.length)],
+    name: name,
+    nameHi: name,
+    duration: days,
+    level: 'Custom',
+    goal: goal,
+    desc: 'Your personalized fitness plan',
+    descHi: 'आपका व्यक्तिगत फिटनेस प्लान',
+    workout: workoutText.split('\n').filter(x => x.trim()),
+    diet: dietText.split('\n').filter(x => x.trim()),
+    tips: tips || 'Stay consistent and trust the process.',
+    tipsHi: tips || 'निरंतरता बनाए रखें।',
+    isCustom: true
+  };
+  
+  if (!state.customPlans) state.customPlans = [];
+  state.customPlans.unshift(newPlan);
+  save();
+  closeModal('customPlanModal');
+  renderBundles();
+  showToast('✨ Custom plan created!');
+}
+
+function deleteCustomPlan(id) {
+  if (!confirm('Delete this custom plan?')) return;
+  state.customPlans = state.customPlans.filter(p => p.id !== id);
+  if (state.activeBundle === id) state.activeBundle = null;
+  delete state.bundleProgress[id];
+  save();
+  closeModal('bundleModal');
+  renderBundles();
+  showToast('Plan deleted');
+}
+
 function renderBundles() {
   const c = document.getElementById('bundlesList');
   c.innerHTML = '';
-  bundles.forEach(b => {
+  const allBundles = getAllBundles();
+  allBundles.forEach(b => {
     const progress = state.bundleProgress[b.id] || 0;
     const pct = (progress / b.duration) * 100;
     const isActive = state.activeBundle === b.id;
@@ -2375,7 +2819,7 @@ function renderBundles() {
       <div class="bundle-header">
         <div class="bundle-icon" style="background: ${b.color}22; color: ${b.color}">${b.icon}</div>
         <div class="bundle-info">
-          <div class="bundle-name">${name}</div>
+          <div class="bundle-name">${name}${b.isCustom ? ' <span style="font-size:11px; background:var(--accent); color:#0a0e1a; padding:2px 8px; border-radius:100px; vertical-align:middle; font-family:Space Grotesk;">CUSTOM</span>' : ''}</div>
           <div class="bundle-meta">
             <span>📅 ${b.duration} ${currentLang === 'hi' ? 'दिन' : 'days'}</span>
             <span>📊 ${b.level}</span>
@@ -2449,13 +2893,14 @@ function showBundle(b) {
     ` : `
       <button class="btn-primary" style="background: ${b.color}; color: #fff;" onclick="startBundle('${b.id}')">${lang ? '🚀 प्रोग्राम शुरू करें' : '🚀 Start This Program'}</button>
     `}
+    ${b.isCustom ? `<button class="btn-primary" style="background: var(--bg-elevated); color: var(--danger); margin-top: 8px;" onclick="deleteCustomPlan('${b.id}')">🗑️ Delete Custom Plan</button>` : ''}
   `;
   openModal('bundleModal');
 }
 
 // ============ DAY TRACKER ============
 function openDayTracker(bundleId) {
-  const b = bundles.find(x => x.id === bundleId);
+  const b = getAllBundles().find(x => x.id === bundleId);
   const currentDay = (state.bundleProgress[bundleId] || 0) + 1;
   const lang = currentLang === 'hi';
   
@@ -2533,7 +2978,7 @@ function openDayTracker(bundleId) {
         ${lang ? 'सभी कार्य पूरे करें फिर अगला दिन अनलॉक होगा' : 'Complete all tasks to unlock next day'}
       </div>
     `}
-    <button class="btn-primary" style="background: var(--bg-elevated); color: var(--text); margin-top: 8px;" onclick="showBundle(bundles.find(x=>x.id==='${bundleId}'))">${lang ? '← वापस' : '← Back'}</button>
+    <button class="btn-primary" style="background: var(--bg-elevated); color: var(--text); margin-top: 8px;" onclick="showBundle(getAllBundles().find(x=>x.id==='${bundleId}'))">${lang ? '← वापस' : '← Back'}</button>
   `;
   openModal('bundleModal');
 }
@@ -2553,7 +2998,7 @@ function toggleTask(bundleId, day, type, index) {
 }
 
 function completeDayAndAdvance(bundleId) {
-  const b = bundles.find(x => x.id === bundleId);
+  const b = getAllBundles().find(x => x.id === bundleId);
   state.bundleProgress[bundleId] = (state.bundleProgress[bundleId] || 0) + 1;
   state.totalWorkouts++;
   state.totalCalsBurned += 200; // approx per day
@@ -2599,7 +3044,7 @@ function startBundle(id) {
 
 function markBundleDay(id) {
   state.bundleProgress[id] = (state.bundleProgress[id] || 0) + 1;
-  const b = bundles.find(x => x.id === id);
+  const b = getAllBundles().find(x => x.id === id);
   if (state.bundleProgress[id] >= b.duration) {
     showToast('🎉 Program Complete!');
     state.activeBundle = null;
